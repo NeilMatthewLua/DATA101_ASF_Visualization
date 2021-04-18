@@ -1,0 +1,21 @@
+Good afternoon Vince, Aaron
+
+Your mission, should you choose to accept it, is to accomplish the following:
+ - Tell us your favorite items 
+    - open favorite_items.txt
+    - on every category, put your surname and your favorite item (i.e. Lua:LUnicorns)
+ - Leave a quote for our group this term 
+    - create a file in the ff format ("surname_quote.txt")
+    - inside the txt file, leave a quote that you'd like to share to the group
+
+Guidelines:
+ - Branch out from this current branch (lua/vince-aaron-task)
+ - Name your branch in this format (surname/word-word-more-words) <- this will be our official way to do it
+ - Once done, commit, publish the branch, and make a pull request back to this branch and request kurt to perform the checking 
+ - Once kurt approves it, you have successfully accomplished this task fellow prodigies.
+
+Reminders:
+ - Dont forget to always pull (Repository->pull) or Fetch origin first before starting
+ - Be descriptive on your commit messages/titles 
+ - Double check where you're branching off of first
+ - Double check where you're making a pull request to 
