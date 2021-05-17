@@ -19,6 +19,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip'
 import { useD3 } from '../hooks/useD3';
 
 const useStyle = makeStyles(theme => ({
@@ -52,7 +53,8 @@ function SidebarChart (props) {
             .scaleBand()
             .domain(props.data.map((d) => d.year))
             .rangeRound([margin.left, width - margin.right])
-            .paddingInner(0.6);
+            .paddingInner(0.6)
+            .paddingOuter(0.2);
 
         const y1 = d3
             .scaleLinear()
@@ -93,6 +95,16 @@ function SidebarChart (props) {
         svg.select(".x-axis").call(xAxis);
         svg.select(".y-axis").call(y1Axis);
 
+        // Create a tooltip 
+        var tip = d3Tip()
+                    .attr('class', 'd3-tip')
+                    .html((d) => {
+                        console.log(d.sales);
+                        return d.sales; 
+                    });
+
+        svg.call(tip);
+
         svg
             .select(".plot-area")
             .selectAll(".bar")
@@ -103,7 +115,11 @@ function SidebarChart (props) {
             .attr("x", (d) => x(d.year))
             .attr("width", x.bandwidth())
             .attr("y", (d) => y1(d.sales))
-            .attr("height", (d) => y1(0) - y1(d.sales));
+            .attr("height", (d) => y1(0) - y1(d.sales))
+            .on('mouseover', function(d,i) { 
+                tip.show(i, this) 
+            })
+            .on('mouseout', tip.hide); 
         },
         [props.data.length]
       );
