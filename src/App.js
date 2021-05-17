@@ -2,6 +2,7 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
+import SideBar from './components/SideBar'
 
 const useStyle = makeStyles(theme => ({
   root: {
@@ -25,6 +26,8 @@ function App() {
       <h1 className={classes.titleText}>
         Interactive ASF Tracker
       </h1>
+
+      <SideBar />
     </div>
   );
 }
