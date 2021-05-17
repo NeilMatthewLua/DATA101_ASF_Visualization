@@ -58,10 +58,15 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'capitalize',
         color: theme.palette.black
     },
-    icon: {
+    icon1: {
         width: '28px !important',
         height: '28px !important'
-    }
+    },
+    icon2: {
+        width: '50px !important',
+        height: '50px !important'
+    },
+
 }));
 
 /**
@@ -103,7 +108,7 @@ function MenuBlock(props) {
                                 color="primary"
                                 onClick={() => handleButtonClicked(block.id)}
                             >
-                                <img className={classes.icon} src={block.icon} />
+                                <img className={block.id == 1 ? classes.icon1 : classes.icon2} src={block.icon} />
                                 {block.label}
                             </Button>
                         </Tooltip>
