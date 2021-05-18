@@ -11,7 +11,8 @@ const theme = createMuiTheme({
         black:              '#000000',
         qualitativeLight:   '#FDBE85',
         qualitativeNeutral: '#FD8D3C',
-        qualitativeDark:    '#D94701'
+        qualitativeDark:    '#D94701',
+        errorRed:           '#D34956',
     }
 });
 
