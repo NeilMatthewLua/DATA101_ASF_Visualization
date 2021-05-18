@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Checkbox, Input, InputLabel, MenuItem, FormControl, ListItemText, ListSubheader, Select, Tooltip  } from '@material-ui/core';
+import { Input, InputLabel, MenuItem, FormControl, ListItemText, ListSubheader, Select, Tooltip  } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
@@ -12,10 +12,8 @@ const useStyles = makeStyles(theme => ({
         transform: 'translate(-50%, -50%)',
     },
     helpIcon: {
-        position: 'absolute',
-        // top: '68%',
-        right: '0px',
-        transform: 'translate(-50%, -50%)',
+        marginTop: '100px',
+        float: 'right',
         width: '20px !important',
         height: '20px !important'
     },
@@ -41,7 +39,7 @@ const MenuProps = {
   getContentAnchorEl: null
 };
 
-function DropDownRegion(props) {
+function DropDownYear(props) {
     const classes = useStyles();
 
     const years = [
@@ -81,4 +79,4 @@ function DropDownRegion(props) {
     )
 }
 
-export default DropDownRegion;
+export default DropDownYear;

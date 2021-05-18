@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import SideBar from './components/SideBar'
+import Map from './components/Map'
 import SidebarChart from './components/SidebarChart';
 import HorizontalBarChart from './components/HorizontalBarChart';
 
@@ -65,6 +66,9 @@ function App() {
   const [sidebarChartData, setSidebarChartData] = useState(data);
   const [selectedRegionsBarChart, setSelectedRegionsBarChart] = useState([]);
   const [chartData, setChartData] = useState(data2);
+  const [menuID, setMenuID] = useState(1);
+  const [yearData, setSelectYear] = useState();
+  const [hogCountView, setHogCountView] = useState();
 
   return (
     <div className={classes.root}>
@@ -73,10 +77,27 @@ function App() {
       </h1>
       <div className={classes.content}>
         <div className={classes.sidebar}>
-          <SideBar onRegionChange={setSelectedRegionsBarChart}/>
+          <SideBar 
+            onRegionChange={setSelectedRegionsBarChart}
+            onYearChange={setSelectYear}
+            onHogViewChange={setHogCountView} 
+            onMenuChange={setMenuID}
+          />
           <SidebarChart regionName={"Region XII"} data={sidebarChartData}/>
         </div>
-        <HorizontalBarChart selectedRegions={selectedRegionsBarChart} data={chartData}/>
+        { 
+          menuID == 1 ?
+            <Map/>  
+          :
+            !hogCountView ?
+              <Map/> 
+            :  
+              <HorizontalBarChart 
+                selectedRegions={selectedRegionsBarChart} 
+                data={chartData} 
+                year={yearData}
+              />
+        }
       </div>
     </div>
   );

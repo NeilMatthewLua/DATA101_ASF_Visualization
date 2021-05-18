@@ -15,7 +15,7 @@
  *
  * ------------------------------------------------------------------------------------------
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
@@ -47,17 +47,21 @@ import './d3Tip.css';
  }));
  
  function HorizontalBarChart (props) {
-     const theme =  useTheme(); 
-     const classes = useStyle(theme);
-     const [chosenYears, setChosenYears] = useState(years);
-     // Color palette for the years
-     const palette = ["#FDBE85", "#FD8D3C", "#D94701"]; 
- 
-     // D3 code to be rendered inside svg
-     const ref = useD3(
+    const theme =  useTheme(); 
+    const classes = useStyle(theme);
+    const [chosenYears, setChosenYears] = useState([]);
+    // Color palette for the years
+    const palette = ["#FDBE85", "#FD8D3C", "#D94701"]; 
+
+    useEffect(() => {
+    setChosenYears([props.year]);
+    }, [props.year])
+
+    // D3 code to be rendered inside svg
+    const ref = useD3(
          (svg) => { 
          const height = 800;
-         const width = 550;
+         const width = 750;
          const margin = { top: 20, right: 30, bottom: 30, left: 80 };
  
          // TODO: update value when hooking up data
@@ -165,32 +169,32 @@ import './d3Tip.css';
             .on('mouseout', tip.hide);
         },
          [props.data.length, props.selectedRegions, chosenYears]
-       );
+    );
 
-       const handleChange = (event) => {
-            setChosenYears(event.target.value.sort());
-        };
+    const handleChange = (event) => {
+        setChosenYears(event.target.value.sort());
+    };
 
-        const MenuProps = {
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "left"
-            },
-            transformOrigin: {
-              vertical: "top",
-              horizontal: "left"
-            },
-            getContentAnchorEl: null
-        };
-     
-       return (
-         <div className={classes.container}>
-             <div>
+    const MenuProps = {
+        anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "left"
+        },
+        transformOrigin: {
+            vertical: "top",
+            horizontal: "left"
+        },
+        getContentAnchorEl: null
+    };
+    
+    return (
+        <div className={classes.container}>
+            <div>
                 <FormControl className={classes.yearFilter}>
-                    <InputLabel id="demo-mutiple-checkbox-label">Select Year/s</InputLabel>
+                    <InputLabel id="mutiple-checkbox-label">Select Year/s</InputLabel>
                     <Select
-                        labelId="demo-mutiple-checkbox-label"
-                        id="demo-mutiple-checkbox"
+                        labelId="mutiple-checkbox-label"
+                        id="mutiple-checkbox"
                         multiple
                         value={chosenYears}
                         onChange={handleChange}
@@ -205,24 +209,24 @@ import './d3Tip.css';
                         ))}
                     </Select>
                 </FormControl>
-             </div>
-             <svg
-                 ref={ref}
-                 style={{
-                     height: 800,
-                     width: 550,
-                     marginRight: "0px",
-                     marginLeft: "0px",
-                 }}
-             >
+            </div>
+            <svg
+                ref={ref}
+                style={{
+                    height: 800,
+                    width: 750,
+                    marginRight: "0px",
+                    marginLeft: "0px",
+                }}
+            >
             <g className="plot-area" />
             <g className="legend-name" />
             <g className="legend-dot" />
             <g className="x-axis" />
             <g className="y-axis" />
             </svg>
-         </div>
-       );
+        </div>
+    );
  }
  
  

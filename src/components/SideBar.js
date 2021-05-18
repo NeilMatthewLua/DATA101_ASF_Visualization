@@ -6,7 +6,7 @@ import DropDownRegion from "./DropDownRegion";
 import DropDownYear from "./DropDownYear";
 import ContainmentIcon from '../assets/focus.svg';
 import HogCountIcon from '../assets/pig.svg';
-import { Button } from '@material-ui/core';
+import { Button, Switch, Typography, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -21,17 +21,20 @@ const useStyles = makeStyles(theme => ({
     button: {
         width: '70%',
         height: '10%',
-        backgroundColor: theme.palette.neutralGreen,
         position: 'absolute',
         bottom: '10px',
         left: '50%',
         transform: 'translate(-50%, -50%)',
+        backgroundColor: theme.palette.neutralGreen,
         border: 'none',
         borderRadius: '10px',
         '&:hover': {
             backgroundColor: theme.palette.lightGreen,
         },
     },
+    middleSet: {
+        marginTop: '20px',
+    }
 }));
 
 
@@ -40,14 +43,22 @@ function SideBar(props) {
     const classes = useStyles();
     const [menuID, setMenuID] = useState(1);
     const [regionList, setRegionChange] = useState([]);
-    const [yearList, setYearChange] = useState();
-    
+    const [yearChoice, setYearChange] = useState();
+    const [checkedBar, setState] = useState(false);
+      
     const menuBlockItems = [
         { id: 1, label: 'Containment Zones', icon: ContainmentIcon, description: 'ADD TOOLTIP HERE', active: true },
         { id: 2, label: 'Hog Count', icon: HogCountIcon, description: 'ADD TOOLTIP HERE', active: true},
     ];
+    
+    const handleSwitchChange = (event) => {
+        setState(event.target.checked);
+        props.onHogViewChange(event.target.checked);
+    };
+    
     const updateCurrentMenuID = (id) => {
         setMenuID(id);
+        props.onMenuChange(id);
         console.log("🚀 ~ file: SideBar.js ~ line 16 ~ updateCurrentMenuID ~ id", id);
     };
     
@@ -61,7 +72,8 @@ function SideBar(props) {
     const handleYearChange = (event) => {
         console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", event.target.value)
         setYearChange(event.target.value);
-        console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", regionList)
+        props.onYearChange(event.target.value);
+        console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", yearChoice)
     };
 
     const handleVisualize = () => {
@@ -76,18 +88,40 @@ function SideBar(props) {
                 updateCurrentMenuID={updateCurrentMenuID}
             />
 
+            {
+                menuID === 2 ?
+                        <div className={classes.middleSet}>
+                            <Grid component="label" container alignItems="center" spacing={1} justify="center">
+                                <Grid item>Map View</Grid>
+                                <Grid item>
+                                    <Switch 
+                                        className={classes.switchView} 
+                                        checked={checkedBar} 
+                                        onChange={handleSwitchChange} 
+                                        color="default" 
+                                        name="switchYear" 
+                                    />
+                                </Grid>
+                                <Grid item>Bar Chart View</Grid>
+                            </Grid>
+                        </div>
+                :
+                    null
+            }
+            
             <DropDownRegion 
                 handleChange={handleRegionChange}
                 regionList={regionList}
             />
             
-            {menuID === 2 ?
-                <DropDownYear 
-                    handleChange={handleYearChange}
-                    yearList={yearList}
-                />
-            :
-                null
+            {
+                menuID === 2 ?
+                    <DropDownYear 
+                        handleChange={handleYearChange}
+                        yearList={yearChoice}
+                    />
+                :
+                    null
             }
 
             <Button 

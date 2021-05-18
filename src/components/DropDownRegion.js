@@ -7,15 +7,13 @@ const useStyles = makeStyles(theme => ({
     dropdownSelect: {
         width: '70%',
         position: 'absolute',
-        marginTop: '40px',
+        marginTop: '30px',
         left: '50%',
         transform: 'translate(-50%, -50%)',
     },
     helpIcon: {
-        position: 'absolute',
-        // top: '50%',
-        right: '0px',
-        transform: 'translate(-50%, -50%)',
+        marginTop: '30px',
+        float: 'right',
         width: '20px !important',
         height: '20px !important'
     },
@@ -43,35 +41,6 @@ const MenuProps = {
 
 function DropDownRegion(props) {
     const classes = useStyles();
-
-    //TODO Consider getting data from BE
-    const islandRegions = [
-        {
-            island: 'Luzon', 
-            regions: [
-                {name: 'Region 1', id: 1},
-                {name: 'Region 2', id: 2},
-                {name: 'Region 3', id: 3}
-            ]
-        },
-        {
-            island: 'Visayas', 
-            regions: [
-                {name: 'Region 4', id: 4},
-                {name: 'Region 5', id: 5},
-                {name: 'Region 6', id: 6}
-            ]
-        },
-        {
-            island: 'Mindanao', 
-            regions: [
-                {name: 'Region 7', id: 7},
-                {name: 'Region 8', id: 8},
-                {name: 'Region 9', id: 9},
-                {name: 'ARMM', id: 10}
-            ]
-        },
-    ];
 
     const regionLuzon = [
         { id: 1, name: 'Region 1' },
