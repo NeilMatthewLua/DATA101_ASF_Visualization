@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     },
     helpIcon: {
         position: 'absolute',
-        top: '50%',
+        // top: '50%',
         right: '0px',
         transform: 'translate(-50%, -50%)',
         width: '20px !important',
