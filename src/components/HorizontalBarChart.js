@@ -26,7 +26,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 import { useD3 } from '../hooks/useD3';
+import './d3Tip.css';
  
  const years = ["2018", "2019", "2020"];
 
@@ -40,8 +42,8 @@ import { useD3 } from '../hooks/useD3';
      },
      yearFilter: {
          float: 'right',
-         width: '100px',
-         maxWidth: '100px'
+         width: '150px',
+         marginRight: "20px"
      }
  }));
  
@@ -67,7 +69,7 @@ import { useD3 } from '../hooks/useD3';
         const regions = [...new Set(props.data.map(place => {
                                     return place.region
                                 }))];
-        console.log(regions)                    
+                           
         const y = d3
              .scaleBand()
              .domain(regions)
@@ -76,7 +78,7 @@ import { useD3 } from '../hooks/useD3';
         
         const ySubgroup = d3
             .scaleBand()                        
-            .domain(years)
+            .domain(chosenYears)
             .range([0, y.bandwidth()])
             .padding([0.05])
         
@@ -84,16 +86,53 @@ import { useD3 } from '../hooks/useD3';
             .scaleOrdinal()
             .domain(years)
             .range(palette);
-                                    
+        
+        // X-axis
         svg
             .append("g")
-            .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-            .call(d3.axisBottom(x).tickFormat(d3.format(".2s")));
+            .attr("transform", "translate(0," + (height-margin.top) + ")")
+            .call(d3.axisBottom(x).tickFormat(d3.format(".2s")).tickSizeOuter(0));
         
+        // Y-axis
         svg
             .append("g")
             .attr("transform", "translate(" + margin.left + " , 0)")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y).tickSizeOuter(0));
+        
+        // Create a tooltip 
+        var tip = d3Tip()
+                    .attr('class', 'd3-tip')
+                    .direction('e')
+                    .offset([0, 5])
+                    .html((d) => {
+                        return d.hogCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                    });
+
+        svg.call(tip);
+
+        // Create legends
+        svg
+            .select(".legend-dot")
+            .selectAll("circle")
+            .data(chosenYears)
+            .join("circle")
+            .attr("cx", (d,i) => width / chosenYears.length / 2 * i + margin.left + 20)
+            .attr("cy", margin.top - 10) // 100 is where the first dot appears. 25 is the distance between dots
+            .attr("r", 5)
+            .style("fill", (d) => colorScale(d));
+
+        // Add one dot in the legend for each name.
+        svg
+            .select(".legend-name")
+            .selectAll("text")
+            .data(chosenYears)
+            .join("text")
+            .attr("x", (d,i) =>  width / chosenYears.length / 2 * i + margin.left + 30)
+            .attr("y", margin.top - 8) // 100 is where the first dot appears. 25 is the distance between dots
+            .style("fill", (d) => colorScale(d))
+            .text((d) => d)
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle");
         
         svg
             .select(".plot-area")
@@ -105,7 +144,7 @@ import { useD3 } from '../hooks/useD3';
             })
             .selectAll("rect")
             .data((d) => {
-                return years.map((key) => {
+                return chosenYears.map((key) => {
                     return { key: key, hogCount: d["count"+key] }; 
                 })
             })
@@ -116,31 +155,36 @@ import { useD3 } from '../hooks/useD3';
             })
             .attr("height", ySubgroup.bandwidth())
             .attr("width", (d) => x(d.hogCount) - margin.left)
-            .attr("fill", (d) => colorScale(d.key));
+            .attr("fill", (d) => colorScale(d.key))
+            .on('mouseover', function(d,i) { 
+                tip.show(i, this) 
+            })
+            .on('mouseout', tip.hide);
         },
-         [props.data.length]
+         [props.data.length, chosenYears]
        );
 
        const handleChange = (event) => {
-            setChosenYears(event.target.value);
+            setChosenYears(event.target.value.sort());
         };
 
-        const ITEM_HEIGHT = 48;
-        const ITEM_PADDING_TOP = 8;
         const MenuProps = {
-            PaperProps: {
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250,
-              },
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "left"
             },
+            transformOrigin: {
+              vertical: "top",
+              horizontal: "left"
+            },
+            getContentAnchorEl: null
         };
      
        return (
          <div className={classes.container}>
-             <div className={classes.yearFilter}>
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-mutiple-checkbox-label">Select Region/s</InputLabel>
+             <div>
+                <FormControl className={classes.yearFilter}>
+                    <InputLabel id="demo-mutiple-checkbox-label">Select Year/s</InputLabel>
                     <Select
                         labelId="demo-mutiple-checkbox-label"
                         id="demo-mutiple-checkbox"
@@ -168,8 +212,10 @@ import { useD3 } from '../hooks/useD3';
                      marginLeft: "0px",
                  }}
              >
-             <g className="plot-area" />
-             </svg>
+            <g className="plot-area" />
+            <g className="legend-name" />
+            <g className="legend-dot" />
+            </svg>
          </div>
        );
  }

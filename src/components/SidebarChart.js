@@ -19,8 +19,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import * as d3 from 'd3';
-import d3Tip from 'd3-tip'
+import d3Tip from 'd3-tip';
 import { useD3 } from '../hooks/useD3';
+import './d3Tip.css';
 
 const useStyle = makeStyles(theme => ({
     container: {
@@ -68,18 +69,18 @@ function SidebarChart (props) {
         svg
             .append("g")
             .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x).tickSizeOuter(0));
         
         svg
             .append("g")
             .attr("transform", "translate(" + margin.left + " , 0)")
-            .call(d3.axisLeft(y).tickFormat(d3.format(".2s")));
+            .call(d3.axisLeft(y).tickFormat(d3.format(".2s")).tickSizeOuter(0));
 
         // Create a tooltip 
         var tip = d3Tip()
                     .attr('class', 'd3-tip')
                     .html((d) => {
-                        return d.hogCount; 
+                        return d.hogCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
                     });
 
         svg.call(tip);
