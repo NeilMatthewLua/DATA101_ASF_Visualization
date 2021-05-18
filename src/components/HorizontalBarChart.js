@@ -15,12 +15,21 @@
  *
  * ------------------------------------------------------------------------------------------
  */
- import React, { useState, useEffect } from 'react';
- import PropTypes from 'prop-types';
- import { useTheme, makeStyles } from '@material-ui/core/styles';
- import * as d3 from 'd3';
- import { useD3 } from '../hooks/useD3';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import * as d3 from 'd3';
+import { useD3 } from '../hooks/useD3';
  
+ const years = ["2018", "2019", "2020"];
+
  const useStyle = makeStyles(theme => ({
      container: {
          display: 'inline-block',
@@ -28,12 +37,18 @@
          borderRadius: '20px',
          padding: '10px',
          marginLeft: '50px'
+     },
+     yearFilter: {
+         float: 'right',
+         width: '100px',
+         maxWidth: '100px'
      }
  }));
  
  function HorizontalBarChart (props) {
      const theme =  useTheme(); 
      const classes = useStyle(theme);
+     const [chosenYears, setChosenYears] = useState(years);
      // Color palette for the years
      const palette = ["#FDBE85", "#FD8D3C", "#D94701"]; 
  
@@ -57,9 +72,7 @@
              .scaleBand()
              .domain(regions)
              .rangeRound([margin.top, height-margin.top])
-             .padding(0.1);
-        
-        const years = ["2018", "2019", "2020"];                        
+             .padding(0.1);                        
         
         const ySubgroup = d3
             .scaleBand()                        
@@ -107,9 +120,45 @@
         },
          [props.data.length]
        );
+
+       const handleChange = (event) => {
+            setChosenYears(event.target.value);
+        };
+
+        const ITEM_HEIGHT = 48;
+        const ITEM_PADDING_TOP = 8;
+        const MenuProps = {
+            PaperProps: {
+              style: {
+                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                width: 250,
+              },
+            },
+        };
      
        return (
          <div className={classes.container}>
+             <div className={classes.yearFilter}>
+                <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-mutiple-checkbox-label">Select Region/s</InputLabel>
+                    <Select
+                        labelId="demo-mutiple-checkbox-label"
+                        id="demo-mutiple-checkbox"
+                        multiple
+                        value={chosenYears}
+                        onChange={handleChange}
+                        input={<Input />}
+                        renderValue={(selected) => selected.join(', ')}
+                        MenuProps={MenuProps}>
+                        {years.map((year) => (
+                            <MenuItem key={year} value={year}>
+                            <Checkbox checked={chosenYears.indexOf(year) > -1} />
+                            <ListItemText primary={year} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+             </div>
              <svg
                  ref={ref}
                  style={{
