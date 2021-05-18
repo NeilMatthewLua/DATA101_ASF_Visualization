@@ -15,7 +15,7 @@
  *
  * ------------------------------------------------------------------------------------------
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
@@ -38,7 +38,6 @@ import './d3Tip.css';
          backgroundColor: theme.palette.white,
          borderRadius: '20px',
          padding: '10px',
-         marginLeft: '50px'
      },
      yearFilter: {
          float: 'right',
@@ -61,15 +60,18 @@ import './d3Tip.css';
          const width = 550;
          const margin = { top: 20, right: 30, bottom: 30, left: 80 };
  
+         // TODO: update value when hooking up data
+         const regions = props.selectedRegions;
+
+         const filteredData = props.data.filter((d) => regions.includes(d.name));
+    
+         console.log(filteredData);
+         
          const x = d3
              .scaleLinear()
-             .domain([0, d3.max(props.data, (d) => Math.max(d.count2018, d.count2019, d.count2020))])
+             .domain([0, d3.max(filteredData, (d) => Math.max(d.count2018, d.count2019, d.count2020))])
              .rangeRound([margin.left, width - margin.right]);
-             
-        const regions = [...new Set(props.data.map(place => {
-                                    return place.region
-                                }))];
-                           
+                                
         const y = d3
              .scaleBand()
              .domain(regions)
@@ -89,13 +91,13 @@ import './d3Tip.css';
         
         // X-axis
         svg
-            .append("g")
+            .select(".x-axis")
             .attr("transform", "translate(0," + (height-margin.top) + ")")
             .call(d3.axisBottom(x).tickFormat(d3.format(".2s")).tickSizeOuter(0));
         
         // Y-axis
         svg
-            .append("g")
+            .select(".y-axis")
             .attr("transform", "translate(" + margin.left + " , 0)")
             .call(d3.axisLeft(y).tickSizeOuter(0));
         
@@ -137,10 +139,11 @@ import './d3Tip.css';
         svg
             .select(".plot-area")
             .selectAll("g")
-            .data(props.data)
+            .data(filteredData)
             .join("g")
             .attr("transform", (d) => {
-                return `translate(0, ${y(d.region)})`
+                console.log(y(d.region));
+                return `translate(0, ${y(d.name)})`
             })
             .selectAll("rect")
             .data((d) => {
@@ -161,7 +164,7 @@ import './d3Tip.css';
             })
             .on('mouseout', tip.hide);
         },
-         [props.data.length, chosenYears]
+         [props.data.length, props.selectedRegions, chosenYears]
        );
 
        const handleChange = (event) => {
@@ -215,6 +218,8 @@ import './d3Tip.css';
             <g className="plot-area" />
             <g className="legend-name" />
             <g className="legend-dot" />
+            <g className="x-axis" />
+            <g className="y-axis" />
             </svg>
          </div>
        );
@@ -224,6 +229,6 @@ import './d3Tip.css';
 HorizontalBarChart.propTypes = {
     data: PropTypes.array,
     selectedRegions: PropTypes.array
- }
+}
  
  export default HorizontalBarChart;

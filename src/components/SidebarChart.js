@@ -28,11 +28,10 @@ const useStyle = makeStyles(theme => ({
         display: 'inline-block',
         backgroundColor: theme.palette.white,
         borderRadius: '20px',
-        padding: '10px',
-        marginLeft: '50px'
     },
     chartTitle: {
-        textAlign: 'center'
+        textAlign: 'center',
+        margin: '10px 0px 0px'
     }
 }));
 
@@ -45,8 +44,8 @@ function SidebarChart (props) {
     // D3 code to be rendered inside svg
     const ref = useD3(
         (svg) => { 
-        const height = 380;
-        const width = 550;
+        const height = 330;
+        const width = 350;
         const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
         const x = d3
@@ -79,6 +78,7 @@ function SidebarChart (props) {
         // Create a tooltip 
         var tip = d3Tip()
                     .attr('class', 'd3-tip')
+                    .offset([-10, 0])
                     .html((d) => {
                         return d.hogCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
                     });
@@ -110,10 +110,10 @@ function SidebarChart (props) {
             <svg
                 ref={ref}
                 style={{
-                    height: 380,
-                    width: 550,
-                    marginRight: "0px",
-                    marginLeft: "0px",
+                    display: 'block',
+                    height: 330,
+                    width: 350,
+                    margin: '0 auto'
                 }}
             >
             <g className="plot-area" />

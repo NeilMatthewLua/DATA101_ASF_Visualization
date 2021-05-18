@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
 import MenuBlock from "./MenuBlock";
 import DropDownRegion from "./DropDownRegion";
@@ -9,9 +10,10 @@ import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '550px',
-        height: '600px',
-        marginLeft: '30px',
+        display: 'inline-block',
+        width: '350px',
+        height: '350px',
+        padding: '20px',
         borderRadius: '20px',
         position: 'relative',
         backgroundColor: theme.palette.white
@@ -34,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-function SideBar() {
+function SideBar(props) {
     const classes = useStyles();
     const [menuID, setMenuID] = useState(1);
     const [regionList, setRegionChange] = useState([]);
@@ -51,7 +53,8 @@ function SideBar() {
     
     const handleRegionChange = (event) => {
         console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", event.target.value)
-        setRegionChange(event.target.value.sort());
+        setRegionChange(event.target.value.sort((a, b) => (a.id > b.id) ? 1 : -1));
+        props.onRegionChange(event.target.value.sort((a, b) => (a.id > b.id) ? 1 : -1));
         console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", regionList)
     };
 
@@ -97,6 +100,10 @@ function SideBar() {
             </Button>
         </div>
     )
+}
+
+SideBar.propTypes = {
+    onRegionChange: PropTypes.func
 }
 
 export default SideBar;
