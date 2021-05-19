@@ -37,7 +37,8 @@ import './d3Tip.css';
          display: 'inline-block',
          backgroundColor: theme.palette.white,
          borderRadius: '20px',
-         padding: '10px',
+         paddingTop: '10px',
+         width: '100%'
      },
      yearFilter: {
          float: 'right',

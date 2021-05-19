@@ -11,29 +11,28 @@ import { Button, Switch, Typography, Grid } from '@material-ui/core';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'inline-block',
-        width: '350px',
-        height: '350px',
-        padding: '20px',
+        width: '70%',
+        height: '100%',
+        padding: '5px',
         borderRadius: '20px',
         position: 'relative',
         backgroundColor: theme.palette.white
     },
     button: {
         width: '70%',
-        height: '10%',
-        position: 'absolute',
-        bottom: '10px',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        padding: '0',
         backgroundColor: theme.palette.neutralGreen,
         border: 'none',
         borderRadius: '10px',
         '&:hover': {
             backgroundColor: theme.palette.lightGreen,
         },
+        marginBottom: '10px'
     },
     middleSet: {
         marginTop: '20px',
+        display: 'flex',
+        justifyContent: 'center'
     }
 }));
 
@@ -124,14 +123,16 @@ function SideBar(props) {
                     null
             }
 
-            <Button 
-                class={classes.button}
-                variant="contained" 
-                color="primary"
-                onClick={() => handleVisualize()}
-            >
-                Visualize
-            </Button>
+            <div className={classes.middleSet}>
+                <Button 
+                    className={classes.button}
+                    variant="contained" 
+                    color="primary"
+                    onClick={() => handleVisualize()}
+                >
+                    Visualize
+                </Button>
+            </div>
         </div>
     )
 }
