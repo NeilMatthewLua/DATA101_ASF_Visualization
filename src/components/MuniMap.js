@@ -35,7 +35,7 @@ function Map() {
 
     const bounds = [
         [111.39419733396409, 2.4205353885351153], // Southwest coordinates
-        [132.10478702271024, 23.622907720786323] // Southwest coordinates
+        [132.10478702271024, 23.622907720786323] // Northeast coordinates
     ];
 
     useEffect(() => {
