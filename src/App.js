@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import SideBar from './components/SideBar'
 import Map from './components/Map'
+import MuniMap from './components/MuniMap'
 import SidebarChart from './components/SidebarChart';
 import HorizontalBarChart from './components/HorizontalBarChart';
 import { Grid } from '@material-ui/core';
@@ -100,7 +101,7 @@ function App() {
         <Grid item xs={7}>
           { 
             menuID == 1 ?
-              <Map />  
+              <MuniMap />  
             :
               !hogCountView ?
                 <Map/> 

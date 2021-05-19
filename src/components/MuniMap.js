@@ -29,7 +29,7 @@ function Map() {
     const map = useRef(null);
     const [lat, setLat] = useState(12.45);
     const [lng, setLng] = useState(122.6);
-    const [zoom, setZoom] = useState(5);
+    const [zoom, setZoom] = useState(6);
     const classes = useStyles();
 
 
@@ -42,9 +42,11 @@ function Map() {
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/neillua/ckouvwv0s2k7k18lnryyc26tv',
+            style: 'mapbox://styles/neillua/ckovhx9bv35o718lnli8uompb',
             center: [lng, lat],
             zoom: zoom,
+            minZoom: 6,
+            maxZoom: 12,
             maxBounds: bounds,
             attributionControl: false
         })
