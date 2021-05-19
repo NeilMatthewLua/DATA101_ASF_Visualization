@@ -48,7 +48,7 @@ function Map() {
             minZoom: 6,
             maxZoom: 12,
             maxBounds: bounds,
-            attributionControl: false
+            // attributionControl: false
         })
         // map.current.addControl(new mapboxgl.AttributionControl(), 'top-left');
     });
