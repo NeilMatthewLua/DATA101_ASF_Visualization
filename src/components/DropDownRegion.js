@@ -43,22 +43,28 @@ function DropDownRegion(props) {
     const classes = useStyles();
 
     const regionLuzon = [
-        { id: 1, name: 'Region 1' },
-        { id: 2, name: 'Region 2' },
-        { id: 3, name: 'Region 3' },
+        { id: 1, name: 'Region I' },
+        { id: 2, name: 'Region II' },
+        { id: 3, name: 'Region III' },
+        { id: 4, name: 'Region IV-A' },
+        { id: 5, name: 'Region IV-B' },
+        { id: 6, name: 'Region V' },
+        { id: 7, name: 'CAR' },
     ]
 
     const regionVisayas = [
-        { id: 4, name: 'Region 4' },
-        { id: 5, name: 'Region 5' },
-        { id: 6, name: 'Region 6' },
+        { id: 8, name: 'Region VI' },
+        { id: 9, name: 'Region VII' },
+        { id: 10, name: 'Region VIII' },
     ]
 
     const regionMindanao = [
-        { id: 7, name: 'Region 7' },
-        { id: 8, name: 'Region 8' },
-        { id: 9, name: 'Region 9' },
-        { id: 10, name: 'ARMM' }
+        { id: 11, name: 'Region IX' },
+        { id: 12, name: 'Region X' },
+        { id: 13, name: 'Region XI' },
+        { id: 14, name: 'Region XII' },
+        { id: 15, name: 'Region XIII' },
+        { id: 16, name: 'ARMM' }
     ]
 
     return (

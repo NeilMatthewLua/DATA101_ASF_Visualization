@@ -37,7 +37,7 @@ import './d3Tip.css';
          display: 'inline-block',
          backgroundColor: theme.palette.white,
          borderRadius: '20px',
-         padding: '10px',
+         padding: '20px',
      },
      yearFilter: {
          float: 'right',
@@ -51,10 +51,12 @@ import './d3Tip.css';
     const classes = useStyle(theme);
     const [chosenYears, setChosenYears] = useState([]);
     // Color palette for the years
-    const palette = ["#FDBE85", "#FD8D3C", "#D94701"]; 
+    const palette = ["#FDBE85", "#FD8D3C", "#D94701"];
 
     useEffect(() => {
-    setChosenYears([props.year]);
+        console.log(props.year);
+        if (props.year != undefined)
+            setChosenYears([props.year]);
     }, [props.year])
 
     // D3 code to be rendered inside svg
@@ -62,24 +64,22 @@ import './d3Tip.css';
          (svg) => { 
          const height = 800;
          const width = 750;
-         const margin = { top: 20, right: 30, bottom: 30, left: 80 };
- 
+         const margin = { top: 20, right: 30, bottom: 50, left: 80 };
+        
          // TODO: update value when hooking up data
-         const regions = props.selectedRegions;
+         const regions = [...new Set(props.data.map((place) => place.region))];
 
-         const filteredData = props.data.filter((d) => regions.includes(d.name));
-    
-         console.log(filteredData);
+         const filteredData = props.data;
          
          const x = d3
              .scaleLinear()
-             .domain([0, d3.max(filteredData, (d) => Math.max(d.count2018, d.count2019, d.count2020))])
+             .domain([0, d3.max(filteredData, (d) => Math.max(d.production_2018, d.production_2019, d.production_2020))])
              .rangeRound([margin.left, width - margin.right]);
                                 
         const y = d3
              .scaleBand()
              .domain(regions)
-             .rangeRound([margin.top, height-margin.top])
+             .rangeRound([margin.top, height-margin.bottom])
              .padding(0.1);                        
         
         const ySubgroup = d3
@@ -96,7 +96,7 @@ import './d3Tip.css';
         // X-axis
         svg
             .select(".x-axis")
-            .attr("transform", "translate(0," + (height-margin.top) + ")")
+            .attr("transform", "translate(0," + (height-margin.bottom) + ")")
             .call(d3.axisBottom(x).tickFormat(d3.format(".2s")).tickSizeOuter(0));
         
         // Y-axis
@@ -115,6 +115,16 @@ import './d3Tip.css';
                     });
 
         svg.call(tip);
+
+        svg
+            .select(".x-axis-label")
+            .selectAll("text")
+            .data(["Hog Production (in metric tons)"])
+            .join("text")
+            .attr("x", width/2)
+            .attr("y", height-margin.bottom+40)
+            .text((d) => d)
+            .attr("text-anchor", "middle")
 
         // Create legends
         svg
@@ -146,13 +156,12 @@ import './d3Tip.css';
             .data(filteredData)
             .join("g")
             .attr("transform", (d) => {
-                console.log(y(d.region));
-                return `translate(0, ${y(d.name)})`
+                return `translate(0, ${y(d.region)})`
             })
             .selectAll("rect")
             .data((d) => {
                 return chosenYears.map((key) => {
-                    return { key: key, hogCount: d["count"+key] }; 
+                    return { key: key, hogCount: d["production_"+key] }; 
                 })
             })
             .join("rect")
@@ -168,7 +177,7 @@ import './d3Tip.css';
             })
             .on('mouseout', tip.hide);
         },
-         [props.data.length, props.selectedRegions, chosenYears]
+        [props.data.length, chosenYears]
     );
 
     const handleChange = (event) => {
@@ -223,6 +232,7 @@ import './d3Tip.css';
             <g className="legend-name" />
             <g className="legend-dot" />
             <g className="x-axis" />
+            <g className="x-axis-label" />
             <g className="y-axis" />
             </svg>
         </div>
@@ -231,8 +241,7 @@ import './d3Tip.css';
  
  
 HorizontalBarChart.propTypes = {
-    data: PropTypes.array,
-    selectedRegions: PropTypes.array
+    data: PropTypes.array
 }
  
- export default HorizontalBarChart;
+export default HorizontalBarChart;
