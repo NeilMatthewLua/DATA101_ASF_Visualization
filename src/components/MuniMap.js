@@ -30,7 +30,7 @@ function Map() {
     const map = useRef(null);
     const [lat, setLat] = useState(12.45);
     const [lng, setLng] = useState(122.6);
-    const [zoom, setZoom] = useState(6);
+    const [zoom, setZoom] = useState(7);
     const classes = useStyles();
 
 
@@ -46,8 +46,8 @@ function Map() {
             style: 'mapbox://styles/neillua/ckovhx9bv35o718lnli8uompb',
             center: [lng, lat],
             zoom: zoom,
-            minZoom: 6,
-            maxZoom: 12,
+            minZoom: 7,
+            maxZoom: 13,
             maxBounds: bounds,
             // attributionControl: false
         })
