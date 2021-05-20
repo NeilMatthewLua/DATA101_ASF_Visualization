@@ -38,6 +38,7 @@ import './d3Tip.css';
          backgroundColor: theme.palette.white,
          borderRadius: '20px',
          paddingTop: '10px',
+         height: '100%',
          width: '100%'
      },
      yearFilter: {
@@ -59,10 +60,6 @@ import './d3Tip.css';
         if (props.year != undefined)
             setChosenYears([props.year]);
     }, [props.year]);
-
-    useEffect(() => {
-        console.log(containerRef.current);
-    }, [containerRef.current]);
 
     // D3 code to be rendered inside svg
     const ref = useD3(
@@ -229,8 +226,8 @@ import './d3Tip.css';
             <svg
                 ref={ref}
                 style={{
-                    height: (containerRef.current) ? containerRef.current.offsetHeight-80 : 800,
-                    width: (containerRef.current) ? containerRef.current.offsetWidth-50 : 750,
+                    height: '100%',
+                    width: '100%',
                     marginRight: "0px",
                     marginLeft: "0px",
                 }}

@@ -42,22 +42,7 @@ function SidebarChart (props) {
     const classes = useStyle(theme);
     const containerRef = useRef(null);
     // Color palette for the years
-    const palette = ["#FDBE85", "#FD8D3C", "#D94701"]; 
-
-    const barChart = document.getElementById("sideBarChart");
-    console.log("🚀 ~ file: SidebarChart.js ~ line 47 ~ SidebarChart ~ barChart", barChart)
-    var barHeight = 330;
-    var barWidth = 350;
-
-    useEffect(() => {
-        console.log("🚀 ~ file: SidebarChart.js ~ line 47 ~ SidebarChart ~ barChart", barChart)
-    }, [])
-    if(barChart != null) {
-        barHeight = barChart.offsetHeight;
-        console.log("🚀 ~ file: SidebarChart.js ~ line 53 ~ SidebarChart ~ barHeight", barHeight)
-        barWidth = barChart.offsetWidth;
-        console.log("🚀 ~ file: SidebarChart.js ~ line 55 ~ SidebarChart ~ barWidth", barWidth)
-    }
+    const palette = ["#FDBE85", "#FD8D3C", "#D94701"];
 
     // D3 code to be rendered inside svg
     const ref = useD3(
@@ -129,8 +114,8 @@ function SidebarChart (props) {
                 ref={ref}
                 style={{
                     display: 'block',
-                    height: (containerRef.current) ? containerRef.current.offsetHeight-50 : 350,
-                    width: (containerRef.current) ? containerRef.current.offsetWidth-30 : 300,
+                    height: '100%',
+                    width: '100%',
                     margin: '0 auto'
                 }}
             >
