@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
 import MenuBlock from "./MenuBlock";
@@ -44,11 +44,19 @@ function SideBar(props) {
     const [regionList, setRegionChange] = useState([]);
     const [yearChoice, setYearChange] = useState();
     const [checkedBar, setState] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
       
     const menuBlockItems = [
         { id: 1, label: 'Containment Zones', icon: ContainmentIcon, description: 'ADD TOOLTIP HERE', active: true },
         { id: 2, label: 'Hog Count', icon: HogCountIcon, description: 'ADD TOOLTIP HERE', active: true},
     ];
+
+    useEffect(() => {
+        if (yearChoice != null && regionList.length > 0) 
+            setIsButtonDisabled(false);
+        else 
+            setIsButtonDisabled(true);
+    }, [yearChoice, regionList]);
     
     const handleSwitchChange = (event) => {
         setState(event.target.checked);
@@ -71,12 +79,13 @@ function SideBar(props) {
     const handleYearChange = (event) => {
         console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", event.target.value)
         setYearChange(event.target.value);
-        props.onYearChange(event.target.value);
         console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", yearChoice)
     };
 
     const handleVisualize = () => {
         console.log("🚀 ~ Clicked Visualize");
+        props.onYearChange(yearChoice);
+        props.onVisualize();
     };
 
     return (
@@ -129,6 +138,7 @@ function SideBar(props) {
                     variant="contained" 
                     color="primary"
                     onClick={() => handleVisualize()}
+                    disabled={isButtonDisabled}
                 >
                     Visualize
                 </Button>
