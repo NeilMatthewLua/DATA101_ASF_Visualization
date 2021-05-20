@@ -55,7 +55,6 @@ import './d3Tip.css';
     const palette = ["#FDBE85", "#FD8D3C", "#D94701"];
 
     useEffect(() => {
-        console.log(props.year);
         if (props.year != undefined)
             setChosenYears([props.year]);
     }, [props.year])
@@ -71,6 +70,8 @@ import './d3Tip.css';
          const regions = [...new Set(props.data.map((place) => place.region))];
 
          const filteredData = props.data;
+
+         console.log(props.data);
          
          const x = d3
              .scaleLinear()

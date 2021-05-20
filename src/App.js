@@ -83,6 +83,7 @@ function App() {
       regions: selectedRegionsBarChart
     })
     .then((res) => {
+      console.log(res);
       setChartData(res.data);
     });
   }
