@@ -8,9 +8,11 @@ const theme = createMuiTheme({
         lightGreen:         '#7EC7AE',
         neutralGreen:       '#D3DEDC',
         white:              '#FFFFFF',
+        black:              '#000000',
         qualitativeLight:   '#FDBE85',
         qualitativeNeutral: '#FD8D3C',
-        qualitativeDark:    '#D94701'
+        qualitativeDark:    '#D94701',
+        errorRed:           '#D34956',
     }
 });
 
