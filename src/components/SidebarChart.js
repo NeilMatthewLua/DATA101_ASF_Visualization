@@ -15,7 +15,7 @@
  *
  * ------------------------------------------------------------------------------------------
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import * as d3 from 'd3';
@@ -40,6 +40,7 @@ const useStyle = makeStyles(theme => ({
 function SidebarChart (props) {
     const theme =  useTheme(); 
     const classes = useStyle(theme);
+    const containerRef = useRef(null);
     // Color palette for the years
     const palette = ["#FDBE85", "#FD8D3C", "#D94701"]; 
 
@@ -61,8 +62,8 @@ function SidebarChart (props) {
     // D3 code to be rendered inside svg
     const ref = useD3(
         (svg) => { 
-        const height = barHeight;
-        const width = barWidth;
+        const height = containerRef.current.offsetHeight-50;
+        const width = containerRef.current.offsetWidth-30;
         const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
         const x = d3
@@ -122,14 +123,14 @@ function SidebarChart (props) {
       );
     
       return (
-        <div id="sideBarChart" className={classes.container}>
+        <div id="sideBarChart" ref={containerRef} className={classes.container}>
             <h4 className={classes.chartTitle}>{props.regionName} Hog Production</h4>
             <svg
                 ref={ref}
                 style={{
                     display: 'block',
-                    height: '100%',
-                    width: '100%',
+                    height: (containerRef.current) ? containerRef.current.offsetHeight-50 : 350,
+                    width: (containerRef.current) ? containerRef.current.offsetWidth-30 : 300,
                     margin: '0 auto'
                 }}
             >

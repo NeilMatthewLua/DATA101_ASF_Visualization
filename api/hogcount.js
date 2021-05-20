@@ -6,6 +6,5 @@ module.exports = (req, res) => {
     let regions = req.body.regions;
     let hogCount = JSON.parse(rawHogCount);
     let filteredResults = hogCount.filter((region) => regions.includes(region.region));
-    console.log(hogCount);
     res.send(filteredResults);
 }

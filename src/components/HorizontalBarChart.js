@@ -15,7 +15,7 @@
  *
  * ------------------------------------------------------------------------------------------
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
@@ -51,19 +51,24 @@ import './d3Tip.css';
     const theme =  useTheme(); 
     const classes = useStyle(theme);
     const [chosenYears, setChosenYears] = useState([]);
+    const containerRef = useRef(null);
     // Color palette for the years
     const palette = ["#FDBE85", "#FD8D3C", "#D94701"];
 
     useEffect(() => {
         if (props.year != undefined)
             setChosenYears([props.year]);
-    }, [props.year])
+    }, [props.year]);
+
+    useEffect(() => {
+        console.log(containerRef.current);
+    }, [containerRef.current]);
 
     // D3 code to be rendered inside svg
     const ref = useD3(
          (svg) => { 
-         const height = 800;
-         const width = 750;
+         const height = containerRef.current.offsetHeight-80;
+         const width = containerRef.current.offsetWidth-50;
          const margin = { top: 20, right: 30, bottom: 50, left: 80 };
         
          // TODO: update value when hooking up data
@@ -199,7 +204,7 @@ import './d3Tip.css';
     };
     
     return (
-        <div className={classes.container}>
+        <div ref={containerRef} className={classes.container}>
             <div>
                 <FormControl className={classes.yearFilter}>
                     <InputLabel id="mutiple-checkbox-label">Select Year/s</InputLabel>
@@ -224,8 +229,8 @@ import './d3Tip.css';
             <svg
                 ref={ref}
                 style={{
-                    height: 800,
-                    width: 750,
+                    height: (containerRef.current) ? containerRef.current.offsetHeight-80 : 800,
+                    width: (containerRef.current) ? containerRef.current.offsetWidth-50 : 750,
                     marginRight: "0px",
                     marginLeft: "0px",
                 }}
