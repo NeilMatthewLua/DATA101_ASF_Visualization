@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import theme from './themes/GlobalTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
+import 'mapbox-gl/dist/mapbox-gl.css';
 // import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(

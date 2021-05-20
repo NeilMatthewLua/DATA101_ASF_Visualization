@@ -50,7 +50,6 @@ function Map() {
             maxBounds: bounds,
             // attributionControl: false
         })
-        // map.current.addControl(new mapboxgl.AttributionControl(), 'top-left');
     });
 
     useEffect(() => {

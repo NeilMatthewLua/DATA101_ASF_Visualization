@@ -6,7 +6,7 @@ import DropDownRegion from "./DropDownRegion";
 import DropDownYear from "./DropDownYear";
 import ContainmentIcon from '../assets/focus.svg';
 import HogCountIcon from '../assets/pig.svg';
-import { Button, Switch, Typography, Grid } from '@material-ui/core';
+import { Button, Switch, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {

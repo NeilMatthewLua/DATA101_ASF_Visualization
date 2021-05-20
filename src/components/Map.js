@@ -46,9 +46,8 @@ function Map() {
             center: [lng, lat],
             zoom: zoom,
             maxBounds: bounds,
-            attributionControl: false
+            // attributionControl: false
         })
-        // map.current.addControl(new mapboxgl.AttributionControl(), 'top-left');
     });
 
     useEffect(() => {
