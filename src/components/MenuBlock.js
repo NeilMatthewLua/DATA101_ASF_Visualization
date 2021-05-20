@@ -34,8 +34,8 @@ const useStyles = makeStyles(theme => ({
         paddingTop: '20px'
     },
     button: {
-        width: '80px',
-        height: '80px',
+        width: '45%',
+        height: '50px',
         backgroundColor: theme.palette.neutralGreen,
         padding: 0,
         '&:hover': {
@@ -43,8 +43,8 @@ const useStyles = makeStyles(theme => ({
         },
     },
     buttonFocus: {
-        width: '80px',
-        height: '80px',
+        width: '45%',
+        height: '50px',
         padding: 0,
         backgroundColor: theme.palette.lightGreen,
         '&:hover': {
@@ -60,11 +60,13 @@ const useStyles = makeStyles(theme => ({
     },
     icon1: {
         width: '28px !important',
-        height: '28px !important'
+        height: '28px !important',
+        marginRight: '10px'
     },
     icon2: {
-        width: '50px !important',
-        height: '50px !important'
+        width: '28px !important',
+        height: '28px !important',
+        marginRight: '10px'
     },
 
 }));
@@ -108,8 +110,12 @@ function MenuBlock(props) {
                                 color="primary"
                                 onClick={() => handleButtonClicked(block.id)}
                             >
-                                <img className={block.id == 1 ? classes.icon1 : classes.icon2} src={block.icon} />
-                                {block.label}
+                                <div style={{display: 'flex'}}>
+                                    <img className={block.id == 1 ? classes.icon1 : classes.icon2} src={block.icon} />
+                                    <div style={{marginTop:'5px'}} >
+                                        {block.label}
+                                    </div>
+                                </div>
                             </Button>
                         </Tooltip>
                     )

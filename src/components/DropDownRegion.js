@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Checkbox, Input, InputLabel, MenuItem, FormControl, ListItemText, ListSubheader, Select, Tooltip  } from '@material-ui/core';
+import { Checkbox, Input, InputLabel, MenuItem, FormControl, ListItemText, ListSubheader, Select, Tooltip } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
     dropdownSelect: {
         width: '70%',
-        position: 'absolute',
-        marginTop: '30px',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        marginTop: '10px',
+        marginRight: '5px'
     },
     helpIcon: {
-        marginTop: '30px',
+        marginTop: '35px',
         float: 'right',
         width: '20px !important',
         height: '20px !important'
     },
+    root: {
+        display: 'flex',
+        justifyContent: 'center'
+    }
 }));
 
 const ITEM_HEIGHT = 48;
@@ -68,7 +70,7 @@ function DropDownRegion(props) {
     ]
 
     return (
-        <div>
+        <div className={classes.root}>
             <FormControl className={classes.dropdownSelect}>
                 <InputLabel id="dropdown-region">Region/s</InputLabel>
                 <Select
@@ -108,7 +110,7 @@ function DropDownRegion(props) {
                 id={`tooltip-ID-${props.type}`}
                 title={"ADD TOOLTIP HERE"}
                 placement="right-start"
-            >
+                >
                 <HelpOutline className={classes.helpIcon}/>
             </Tooltip>
         </div>

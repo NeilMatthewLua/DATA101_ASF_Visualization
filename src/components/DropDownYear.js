@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Input, InputLabel, MenuItem, FormControl, ListItemText, ListSubheader, Select, Tooltip  } from '@material-ui/core';
+import { Input, InputLabel, MenuItem, FormControl, ListItemText, Select, Tooltip  } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
     dropdownSelect: {
         width: '70%',
-        position: 'absolute',
-        marginTop: '100px',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        marginTop: '20px',
+        marginRight: '5px'
     },
     helpIcon: {
-        marginTop: '100px',
+        marginTop: '45px',
         float: 'right',
         width: '20px !important',
         height: '20px !important'
     },
+    root: {
+        display: 'flex',
+        justifyContent: 'center'
+    }
 }));
 
 const ITEM_HEIGHT = 48;
@@ -49,7 +51,7 @@ function DropDownYear(props) {
     ]
 
     return (
-        <div>
+        <div className={classes.root}>
             <FormControl className={classes.dropdownSelect}>
                 <InputLabel id="dropdown-year">Year</InputLabel>
                 <Select

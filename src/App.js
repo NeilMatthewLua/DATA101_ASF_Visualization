@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import SideBar from './components/SideBar'
 import Map from './components/Map'
+import MuniMap from './components/MuniMap'
 import SidebarChart from './components/SidebarChart';
 import HorizontalBarChart from './components/HorizontalBarChart';
+import { Grid } from '@material-ui/core';
 import axios from 'axios'; 
 
 const useStyle = makeStyles(theme => ({
@@ -22,9 +24,9 @@ const useStyle = makeStyles(theme => ({
     textAlign: 'center'
   },
   content: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    // display: 'flex',
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
     padding: "0px 40px"
   },
   sidebar: {
@@ -32,7 +34,12 @@ const useStyle = makeStyles(theme => ({
     flexDirection: 'column',
     gap: '40px'
     // justifyContent: 'space-between'
-  }
+  },
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(12, 1fr)',
+    gridGap: theme.spacing(3),
+  },
 }));
 
 const data = [
@@ -85,30 +92,37 @@ function App() {
       <h1 className={classes.titleText}>
         Interactive ASF Tracker
       </h1>
-      <div className={classes.content}>
-        <div className={classes.sidebar}>
-          <SideBar 
-            onRegionChange={setSelectedRegionsBarChart}
-            onYearChange={setSelectYear}
-            onHogViewChange={setHogCountView} 
-            onMenuChange={setMenuID}
-            onVisualize={handleBarChartVisualize}
-          />
-          {/* <SidebarChart regionName={"Region XII"} data={sidebarChartData}/> */}
-        </div>
-        { 
-          menuID == 1 ?
-            <Map/>  
-          :
-            !hogCountView ?
-              <Map/> 
-            :  
-              <HorizontalBarChart 
-                data={chartData}
-                year={yearData}
-              />
-        }
-      </div>
+      <Grid container spacing={1}>
+        <Grid item xs={5}>
+          <div className={classes.sidebar}>
+            <SideBar 
+              onRegionChange={setSelectedRegionsBarChart}
+              onYearChange={setSelectYear}
+              onHogViewChange={setHogCountView} 
+              onMenuChange={setMenuID}
+              onVisualize={handleBarChartVisualize}
+            />
+            <SidebarChart 
+              regionName={"Region XII"} 
+              data={sidebarChartData}
+            />
+          </div>
+        </Grid>
+        <Grid item xs={7}>
+          { 
+            menuID == 1 ?
+              <MuniMap />  
+            :
+              !hogCountView ?
+                <Map/> 
+              :  
+                <HorizontalBarChart  
+                  data={chartData} 
+                  year={yearData}
+                />
+          }
+        </Grid>
+      </Grid>
     </div>
   );
 }

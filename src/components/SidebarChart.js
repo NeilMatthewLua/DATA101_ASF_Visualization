@@ -25,6 +25,8 @@ import './d3Tip.css';
 
 const useStyle = makeStyles(theme => ({
     container: {
+        width: '72%',
+        height: '50vh',
         display: 'inline-block',
         backgroundColor: theme.palette.white,
         borderRadius: '20px',
@@ -41,11 +43,26 @@ function SidebarChart (props) {
     // Color palette for the years
     const palette = ["#FDBE85", "#FD8D3C", "#D94701"]; 
 
+    const barChart = document.getElementById("sideBarChart");
+    console.log("🚀 ~ file: SidebarChart.js ~ line 47 ~ SidebarChart ~ barChart", barChart)
+    var barHeight = 330;
+    var barWidth = 350;
+
+    useEffect(() => {
+        console.log("🚀 ~ file: SidebarChart.js ~ line 47 ~ SidebarChart ~ barChart", barChart)
+    }, [])
+    if(barChart != null) {
+        barHeight = barChart.offsetHeight;
+        console.log("🚀 ~ file: SidebarChart.js ~ line 53 ~ SidebarChart ~ barHeight", barHeight)
+        barWidth = barChart.offsetWidth;
+        console.log("🚀 ~ file: SidebarChart.js ~ line 55 ~ SidebarChart ~ barWidth", barWidth)
+    }
+
     // D3 code to be rendered inside svg
     const ref = useD3(
         (svg) => { 
-        const height = 330;
-        const width = 350;
+        const height = barHeight;
+        const width = barWidth;
         const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
         const x = d3
@@ -105,14 +122,14 @@ function SidebarChart (props) {
       );
     
       return (
-        <div className={classes.container}>
+        <div id="sideBarChart" className={classes.container}>
             <h4 className={classes.chartTitle}>{props.regionName} Hog Production</h4>
             <svg
                 ref={ref}
                 style={{
                     display: 'block',
-                    height: 330,
-                    width: 350,
+                    height: '100%',
+                    width: '100%',
                     margin: '0 auto'
                 }}
             >
