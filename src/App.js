@@ -112,7 +112,9 @@ function App() {
         <Grid item xs={7}>
           { 
             menuID == 1 ?
-              <MuniMap />  
+              <MuniMap 
+                chartData={selectedRegionsBarChart}
+              />  
             :
               !hogCountView ?
                 <Map/> 

@@ -25,14 +25,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Map() {
+function Map(props) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lat, setLat] = useState(12.45);
     const [lng, setLng] = useState(122.6);
     const [zoom, setZoom] = useState(7);
+    const [regions, setRegions] = useState([]);
     const classes = useStyles();
-
 
     const bounds = [
         [111.39419733396409, 2.4205353885351153], // Southwest coordinates
@@ -43,24 +43,44 @@ function Map() {
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/neillua/ckovhx9bv35o718lnli8uompb',
+            style: 'mapbox://styles/neillua/ckoviez0f7rct17qtbj7zn6yd',
             center: [lng, lat],
             zoom: zoom,
             minZoom: 7,
             maxZoom: 13,
             maxBounds: bounds,
-            // attributionControl: false
         })
     });
 
+    // useEffect(() => {
+    //     if (!map.current) return; // wait for map to initialize
+    //     map.current.on('move', () => {
+    //     setLng(map.current.getCenter().lng.toFixed(4));
+    //     setLat(map.current.getCenter().lat.toFixed(4));
+    //     setZoom(map.current.getZoom().toFixed(2));
+    //     });
+    // });
+
+
     useEffect(() => {
-        if (!map.current) return; // wait for map to initialize
-        map.current.on('move', () => {
-        setLng(map.current.getCenter().lng.toFixed(4));
-        setLat(map.current.getCenter().lat.toFixed(4));
-        setZoom(map.current.getZoom().toFixed(2));
-        });
-    });
+        if(props.chartData.length > 0) {
+            console.log("🚀 ~ file: MuniMap.js ~ line 92 ~ useEffect ~ props.ChartData", props.chartData.length)
+            setRegions(props.chartData);
+        }
+    }, [props.chartData]);
+    
+    useEffect(() => {
+        if (map.current) {
+            if(regions.length > 0) {
+                map.current.setLayoutProperty(
+                    'ASF-Data',
+                    'visibility',
+                    'visible'
+                );
+                map.current.setFilter('ASF-Data', ['match', ['get', 'Region'], regions, true, false]);
+            }
+        }
+    }, [regions]);
 
     return(
         // <div>

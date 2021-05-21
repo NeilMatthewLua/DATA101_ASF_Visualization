@@ -52,10 +52,18 @@ function SideBar(props) {
     ];
 
     useEffect(() => {
-        if (yearChoice != null && regionList.length > 0) 
-            setIsButtonDisabled(false);
-        else 
-            setIsButtonDisabled(true);
+        if (menuID == 1) {
+            if (regionList.length > 0) 
+                setIsButtonDisabled(false);
+            else 
+                setIsButtonDisabled(true);
+        }
+        else {
+            if (yearChoice != null && regionList.length > 0) 
+                setIsButtonDisabled(false);
+            else 
+                setIsButtonDisabled(true);
+        }
     }, [yearChoice, regionList]);
     
     const handleSwitchChange = (event) => {
@@ -66,25 +74,19 @@ function SideBar(props) {
     const updateCurrentMenuID = (id) => {
         setMenuID(id);
         props.onMenuChange(id);
-        console.log("🚀 ~ file: SideBar.js ~ line 16 ~ updateCurrentMenuID ~ id", id);
     };
     
     const handleRegionChange = (event) => {
-        console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", event.target.value)
         setRegionChange(event.target.value.sort((a, b) => (a.id > b.id) ? 1 : -1));
-        props.onRegionChange(event.target.value.sort((a, b) => (a.id > b.id) ? 1 : -1));
-        console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", regionList)
     };
-
+    
     const handleYearChange = (event) => {
-        console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", event.target.value)
         setYearChange(event.target.value);
-        console.log("🚀 ~ file: SideBar.js ~ line 62 ~ SideBar ~ regionList", yearChoice)
     };
-
+    
     const handleVisualize = () => {
-        console.log("🚀 ~ Clicked Visualize");
         props.onYearChange(yearChoice);
+        props.onRegionChange(regionList.sort((a, b) => (a.id > b.id) ? 1 : -1));
         props.onVisualize();
     };
 
