@@ -43,7 +43,7 @@ function SideBar(props) {
     const [menuID, setMenuID] = useState(1);
     const [regionList, setRegionChange] = useState([]);
     const [yearChoice, setYearChange] = useState();
-    const [checkedBar, setState] = useState(false);
+    const [checkedBar, setCheckedBar] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
       
     const menuBlockItems = [
@@ -52,27 +52,24 @@ function SideBar(props) {
     ];
 
     useEffect(() => {
-        if (menuID == 1) {
-            if (regionList.length > 0) 
-                setIsButtonDisabled(false);
-            else 
-                setIsButtonDisabled(true);
+        if (yearChoice == null && menuID != 1) {
+            setIsButtonDisabled(true); 
         }
-        else {
-            if (yearChoice != null && regionList.length > 0) 
-                setIsButtonDisabled(false);
-            else 
-                setIsButtonDisabled(true);
+        else if ((menuID == 1 || menuID == 2 && checkedBar) && regionList.length == 0) {
+            setIsButtonDisabled(true); 
+        } else {
+            setIsButtonDisabled(false);
         }
-    }, [yearChoice, regionList]);
+    }, [yearChoice, regionList, checkedBar]);
     
     const handleSwitchChange = (event) => {
-        setState(event.target.checked);
+        setCheckedBar(event.target.checked);
         props.onHogViewChange(event.target.checked);
     };
     
     const updateCurrentMenuID = (id) => {
         setMenuID(id);
+        setCheckedBar(false);
         props.onMenuChange(id);
     };
     
@@ -85,8 +82,8 @@ function SideBar(props) {
     };
     
     const handleVisualize = () => {
+        props.onRegionChange(regionList);
         props.onYearChange(yearChoice);
-        props.onRegionChange(regionList.sort((a, b) => (a.id > b.id) ? 1 : -1));
         props.onVisualize();
     };
 
@@ -109,7 +106,7 @@ function SideBar(props) {
                                         checked={checkedBar} 
                                         onChange={handleSwitchChange} 
                                         color="default" 
-                                        name="switchYear" 
+                                        name="switchView" 
                                     />
                                 </Grid>
                                 <Grid item>Bar Chart View</Grid>
@@ -119,10 +116,16 @@ function SideBar(props) {
                     null
             }
             
-            <DropDownRegion 
-                handleChange={handleRegionChange}
-                regionList={regionList}
-            />
+            {
+                menuID == 1  || menuID == 2 && checkedBar ? 
+                    <DropDownRegion 
+                        handleChange={handleRegionChange}
+                        regionList={regionList}
+                        menu={menuID}
+                    />
+                :
+                    null
+            }
             
             {
                 menuID === 2 ?
@@ -137,8 +140,7 @@ function SideBar(props) {
             <div className={classes.middleSet}>
                 <Button 
                     className={classes.button}
-                    variant="contained" 
-                    color="primary"
+                    // variant="contained"
                     onClick={() => handleVisualize()}
                     disabled={isButtonDisabled}
                 >

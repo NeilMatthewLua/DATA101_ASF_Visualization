@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Checkbox, Input, InputLabel, MenuItem, FormControl, ListItemText, ListSubheader, Select, Tooltip } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
@@ -18,6 +18,9 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         justifyContent: 'center'
+    },
+    disableClick: {
+        pointerEvents: 'none',
     }
 }));
 
@@ -43,6 +46,17 @@ const MenuProps = {
 
 function DropDownRegion(props) {
     const classes = useStyles();
+
+    const regionLuzonNCR = [
+        { id: 0, name: 'NCR' },
+        { id: 1, name: 'Region I' },
+        { id: 2, name: 'Region II' },
+        { id: 3, name: 'Region III' },
+        { id: 4, name: 'Region IV-A' },
+        { id: 5, name: 'Region IV-B' },
+        { id: 6, name: 'Region V' },
+        { id: 7, name: 'CAR' },
+    ]
 
     const regionLuzon = [
         { id: 1, name: 'Region I' },
@@ -83,21 +97,31 @@ function DropDownRegion(props) {
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}
                 >
-                    <ListSubheader disableSticky>Luzon</ListSubheader>
-                    {regionLuzon.map((region) => (
-                        <MenuItem key={region.id} value={region.name}>
-                            <Checkbox checked={props.regionList.indexOf(region.name) > -1}/>
-                            <ListItemText primary={region.name} />
-                        </MenuItem>
-                    ))} 
-                    <ListSubheader disableSticky>Visayas</ListSubheader>
+                    <ListSubheader disableSticky className={classes.disableClick}>Luzon</ListSubheader>
+                    {
+                        props.menu == 1 ? 
+                            regionLuzonNCR.map((region) => (
+                                <MenuItem key={region.id} value={region.name}>
+                                    <Checkbox checked={props.regionList.indexOf(region.name) > -1}/>
+                                    <ListItemText primary={region.name} />
+                                </MenuItem>
+                            )) 
+                        :
+                            regionLuzon.map((region) => (
+                                <MenuItem key={region.id} value={region.name}>
+                                    <Checkbox checked={props.regionList.indexOf(region.name) > -1}/>
+                                    <ListItemText primary={region.name} />
+                                </MenuItem>
+                            )) 
+                    }
+                    <ListSubheader disableSticky className={classes.disableClick}>Visayas</ListSubheader>
                     {regionVisayas.map((region) => (
                         <MenuItem key={region.id} value={region.name}>
                             <Checkbox checked={props.regionList.indexOf(region.name) > -1}/>
                             <ListItemText primary={region.name} />
                         </MenuItem>
                     ))} 
-                    <ListSubheader disableSticky>Mindanao</ListSubheader>
+                    <ListSubheader disableSticky className={classes.disableClick}>Mindanao</ListSubheader>
                     {regionMindanao.map((region) => (
                         <MenuItem key={region.id} value={region.name}>
                             <Checkbox checked={props.regionList.indexOf(region.name) > -1}/>
