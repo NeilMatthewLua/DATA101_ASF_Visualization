@@ -52,11 +52,16 @@ function SideBar(props) {
     ];
 
     useEffect(() => {
-        if (yearChoice != null && regionList.length > 0) 
+        if (yearChoice == null) {
+            setIsButtonDisabled(true); 
+        }
+        else if ((menuID == 1 || menuID == 2 && checkedBar) && regionList.length == 0) {
+            console.log("DING")
+            setIsButtonDisabled(true); 
+        } else {
             setIsButtonDisabled(false);
-        else 
-            setIsButtonDisabled(true);
-    }, [yearChoice, regionList]);
+        }
+    }, [yearChoice, regionList, checkedBar]);
     
     const handleSwitchChange = (event) => {
         setState(event.target.checked);
@@ -117,10 +122,15 @@ function SideBar(props) {
                     null
             }
             
-            <DropDownRegion 
-                handleChange={handleRegionChange}
-                regionList={regionList}
-            />
+            {
+                menuID == 1  || menuID == 2 && checkedBar ? 
+                    <DropDownRegion 
+                        handleChange={handleRegionChange}
+                        regionList={regionList}
+                    />
+                :
+                    null
+            }
             
             {
                 menuID === 2 ?

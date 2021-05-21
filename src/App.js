@@ -2,9 +2,10 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
-import SideBar from './components/SideBar'
-import Map from './components/Map'
-import MuniMap from './components/MuniMap'
+import SideBar from './components/SideBar';
+import Map from './components/Map';
+import MuniMap from './components/MuniMap';
+import ChoroplethMap from './components/ChoroplethMap';
 import SidebarChart from './components/SidebarChart';
 import HorizontalBarChart from './components/HorizontalBarChart';
 import { Grid } from '@material-ui/core';
@@ -47,26 +48,6 @@ const data = [
   {year: 2018,  hogCount: 687300},
   {year: 2020,  hogCount: 600300},
 ];
-
-const data2 = [
-  {name:"Region 1", count2018: 360000,  count2019: 687300, count2020: 600300},
-  {name:"Region 2", count2018: 460000,  count2019: 687300, count2020: 600300},
-  {name:"Region 3", count2018: 560000,  count2019: 687300, count2020: 600300},
-  {name:"Region 4", count2018: 260000,  count2019: 687300, count2020: 600300},
-  {name:"Region 5", count2018: 160000,  count2019: 687300, count2020: 600300},
-  {name:"Region 6", count2018: 460000,  count2019: 687300, count2020: 600300},
-  // {region:"Region VII", count2018: 560000,  count2019: 687300, count2020: 600300},
-  // {region:"Region VIII", count2018: 260000,  count2019: 687300, count2020: 600300},
-  // {region:"Region IX", count2018: 360000,  count2019: 687300, count2020: 600300},
-  // {region:"Region X", count2018: 360000,  count2019: 687300, count2020: 600300},
-  // {region:"Region XI", count2018: 370000,  count2019: 687300, count2020: 600300},
-  // {region:"Region XII", count2018: 380000,  count2019: 687300, count2020: 600300},
-  // {region:"Region XIII", count2018: 860000,  count2019: 687300, count2020: 600300},
-  // {region:"Region XIV", count2018: 960000,  count2019: 687300, count2020: 600300},
-  // {region:"Region XV", count2018: 260000,  count2019: 687300, count2020: 600300},
-  // {region:"Region XVI", count2018: 460000,  count2019: 687300, count2020: 600300},
-  {name:"ARMM", count2018: 560000,  count2019: 687300, count2020: 600300},
-]
 
 function App() {
   const theme =  useTheme(); 
@@ -115,7 +96,7 @@ function App() {
               <MuniMap />  
             :
               !hogCountView ?
-                <Map/> 
+                <ChoroplethMap year={yearData}/> 
               :  
                 <HorizontalBarChart  
                   data={chartData} 
