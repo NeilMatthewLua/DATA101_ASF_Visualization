@@ -59,6 +59,7 @@ function ChoroplethMap(props) {
     const [zoom, setZoom] = useState(5);
     const classes = useStyles();
 
+    // Create the stop values for the legend based on max values per year
     const createStops = (year) => {
         const maxVals = { '2018': 110000, '2019': 112000, '2020': 114000};
         var list = [];
@@ -95,15 +96,32 @@ function ChoroplethMap(props) {
             setLat(map.current.getCenter().lat.toFixed(4));
             setZoom(map.current.getZoom().toFixed(2));
         });
+
+        // On map click
         map.current.on('click', (e) => {
-            var regionData = map.current.queryRenderedFeatures(e.point)[0]?.properties;
-            if (regionData) {
-                props.onClickRegion(regionData);
-                console.log(regionData);
+            // Retrieve layer details
+            var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['hogcount_2018', 'hogcount_2019', 'hogcount_2020' ]});
+
+            // Check queried data
+            if (regionData[0]) {
+                // Update data to be used for sidebar chart
+                props.onClickRegion(regionData[0].properties);
+                
+                var selectedYear = regionData[0].layer.id.split("_")[1];
+                // Add a tooltip
+                var description = "";
+                description += "<div><b>Region Name:</b> " + regionData[0].properties.Region + "</div>";
+                description += "<div><b>Hog production (in metric tons):</b> " + regionData[0].properties["production_"+selectedYear].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + "</div>";
+                
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(description)
+                    .addTo(map.current);
             }
         });
     }, [map.current]);
-
+    
+    // Set visibility of layer based on chosen year for visualization
     useEffect(() => {
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
 
@@ -122,11 +140,6 @@ function ChoroplethMap(props) {
 
 
     return(
-        // <div>
-        //     <div className={classes.sidebar}>
-        //     Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-        //     </div>
-        // {/* </div> */}
         <div>
             <div ref={mapContainer}  className={classes.mapContainer}/>
             <ChoroplethLegend values={props.year ? createStops(props.year) : []}/>

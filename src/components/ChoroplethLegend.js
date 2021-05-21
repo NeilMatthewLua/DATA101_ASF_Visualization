@@ -8,9 +8,9 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoidmlzc2FyaW9uIiwiYSI6ImNrbzJsNXZsMjAycGIydm8ya
 
 const useStyles = makeStyles(theme => ({
     legend : {
-        position: 'relative',
-        top: '-78vh',
-        right: '-43vw',
+        position: 'absolute',
+        top: '100px',
+        right: '40px',
         display: 'inline-block',
         zIndex: '999',
         padding: '10px',
