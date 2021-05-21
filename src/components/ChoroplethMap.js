@@ -129,7 +129,6 @@ function ChoroplethMap(props) {
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
 
         if (props.year != undefined && map.current.isStyleLoaded()) {
-
             layerIDs.forEach((id) => {
                 if ("hogcount_" + props.year == id) {
                     map.current.setLayoutProperty(id, 'visibility', 'visible'); 
@@ -141,9 +140,9 @@ function ChoroplethMap(props) {
         } else {
             setLegendValues([]);
         }
-    }, [props.year]);
+    }, [props.isUpdate]);
 
-
+    
 
     return(
         <div>
@@ -154,7 +153,7 @@ function ChoroplethMap(props) {
 }
 
 ChoroplethMap.propTypes = {
-    year: PropTypes.number
+    year: PropTypes.string
 }
 
 export default ChoroplethMap;

@@ -57,16 +57,23 @@ function App() {
   const [chartData, setChartData] = useState([]);
   const [menuID, setMenuID] = useState(1);
   const [yearData, setSelectYear] = useState();
-  const [hogCountView, setHogCountView] = useState();
+  const [hogCountView, setHogCountView] = useState(false);
+  const [updateMap, setUpdateMap] = useState(false);
 
   const handleBarChartVisualize = async () => {
-    await axios.post("/api/hogcount", {
-      regions: selectedRegionsBarChart
-    })
-    .then((res) => {
-      console.log(res);
-      setChartData(res.data);
-    });
+    // Bar chart viz
+    if (menuID == 2 && hogCountView) {
+      await axios.post("/api/hogcount", {
+        regions: selectedRegionsBarChart
+      })
+      .then((res) => {
+        console.log(res);
+        setChartData(res.data);
+      });
+    } else if (menuID == 2 && !hogCountView) {
+    // Choropleth viz
+      setUpdateMap(!updateMap);
+    }
   }
 
   return (
@@ -96,7 +103,10 @@ function App() {
               <MuniMap />  
             :
               !hogCountView ?
-                <ChoroplethMap year={yearData} onClickRegion={setSidebarChartData}/> 
+                <ChoroplethMap 
+                  year={yearData} 
+                  onClickRegion={setSidebarChartData}
+                  isUpdate={updateMap}/> 
               :  
                 <HorizontalBarChart  
                   data={chartData} 
