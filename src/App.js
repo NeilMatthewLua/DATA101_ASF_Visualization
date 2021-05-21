@@ -96,7 +96,7 @@ function App() {
               <MuniMap />  
             :
               !hogCountView ?
-                <ChoroplethMap year={yearData}/> 
+                <ChoroplethMap year={yearData} onClickRegion={setSidebarChartData}/> 
               :  
                 <HorizontalBarChart  
                   data={chartData} 

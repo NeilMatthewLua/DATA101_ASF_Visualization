@@ -15,10 +15,10 @@ const useStyles = makeStyles(theme => ({
         zIndex: '999',
         padding: '10px',
         height: '150px',
-        width: '130px',
+        width: '140px',
         backgroundColor: "#fff",
         borderRadius: "20px",
-        padding: "20px"
+        padding: "10px 20px 10px"
     },
     legendKey : {
         display: 'inline-block',
@@ -42,7 +42,7 @@ function ChoroplethLegend(props) {
             {props.values.map((entry, index) => (
                 <div>
                     <span className={classes.legendKey} style={{backgroundColor : palette[index]}}/>
-                    { entry[0] + " - " + entry[1]}
+                    { entry }
                 </div>
             ))}
         </div>

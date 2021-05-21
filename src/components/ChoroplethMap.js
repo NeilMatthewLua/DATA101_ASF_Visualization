@@ -59,6 +59,16 @@ function ChoroplethMap(props) {
     const [zoom, setZoom] = useState(5);
     const classes = useStyles();
 
+    const createStops = (year) => {
+        const maxVals = { '2018': 110000, '2019': 112000, '2020': 114000};
+        var list = [];
+        for (let i = 0; i < 5; i++) {
+            let lb = (i * maxVals[year] / 5).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            let ub = ((i + 1) * maxVals[year] / 5 - 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            list.push(lb + " - " + ub);
+        }
+        return list;
+    } 
 
     const bounds = [
         [111.39419733396409, 2.4205353885351153], // Southwest coordinates
@@ -86,8 +96,11 @@ function ChoroplethMap(props) {
             setZoom(map.current.getZoom().toFixed(2));
         });
         map.current.on('click', (e) => {
-            var regionData = map.current.queryRenderedFeatures(e.point)[0].properties;
-            console.log(regionData);
+            var regionData = map.current.queryRenderedFeatures(e.point)[0]?.properties;
+            if (regionData) {
+                props.onClickRegion(regionData);
+                console.log(regionData);
+            }
         });
     }, [map.current]);
 
@@ -116,7 +129,7 @@ function ChoroplethMap(props) {
         // {/* </div> */}
         <div>
             <div ref={mapContainer}  className={classes.mapContainer}/>
-            <ChoroplethLegend values={props.year ? stops[props.year] : []}/>
+            <ChoroplethLegend values={props.year ? createStops(props.year) : []}/>
         </div>
     )
 }
