@@ -49,34 +49,53 @@ function SidebarChart (props) {
         (svg) => { 
         const height = containerRef.current.offsetHeight-50;
         const width = containerRef.current.offsetWidth-30;
-        const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+        const margin = { top: 20, right: 10, bottom: 30, left: 60 };
+
+        const processedData = [
+            { year: 2018, hogCount: props.data.production_2018 },
+            { year: 2019, hogCount: props.data.production_2019 },
+            { year: 2020, hogCount: props.data.production_2020 }
+        ];
 
         const x = d3
             .scaleBand()
-            .domain(props.data.map((d) => d.year))
+            .domain(processedData.map((d) => d.year))
             .rangeRound([margin.left, width - margin.right])
             .paddingInner(0.6)
             .paddingOuter(0.2);
 
         const y = d3
             .scaleLinear()
-            .domain([0, d3.max(props.data, (d) => d.hogCount)])
+            .domain([0, d3.max(processedData, (d) => d.hogCount)])
             .rangeRound([height - margin.bottom, margin.bottom]);
         
         const colorScale = d3
             .scaleOrdinal()
-            .domain(props.data.map((d => d.year)))
+            .domain(processedData.map((d => d.year)))
             .range(palette);
 
+        // X-axis
         svg
-            .append("g")
-            .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+            .select(".x-axis")
+            .attr("transform", "translate(0," + (height-margin.bottom) + ")")
             .call(d3.axisBottom(x).tickSizeOuter(0));
         
+        // Y-axis
         svg
-            .append("g")
+            .select(".y-axis")
             .attr("transform", "translate(" + margin.left + " , 0)")
             .call(d3.axisLeft(y).tickFormat(d3.format(".2s")).tickSizeOuter(0));
+
+        svg
+            .select(".y-axis-label")
+            .selectAll("text")
+            .data(["Hog Production (in metric tons)"])
+            .join("text")
+            .attr("x", -height/2)
+            .attr("y", margin.left-40)
+            .attr("transform", "rotate(-90)")
+            .attr("text-anchor", "middle")
+            .text((d) => d);
 
         // Create a tooltip 
         var tip = d3Tip()
@@ -91,7 +110,7 @@ function SidebarChart (props) {
         svg
             .select(".plot-area")
             .selectAll(".bar")
-            .data(props.data)
+            .data(processedData)
             .join("rect")
             .attr("fill", (d) => colorScale(d.year))
             .attr("class", "bar")
@@ -104,7 +123,7 @@ function SidebarChart (props) {
             })
             .on('mouseout', tip.hide); 
         },
-        [props.data.length]
+        [props.data]
       );
     
       return (
@@ -120,6 +139,9 @@ function SidebarChart (props) {
                 }}
             >
             <g className="plot-area" />
+            <g className="x-axis" />
+            <g className="y-axis" />
+            <g className="y-axis-label" />
             </svg>
         </div>
       );
