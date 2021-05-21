@@ -57,16 +57,19 @@ function ChoroplethMap(props) {
     const [lat, setLat] = useState(12.45);
     const [lng, setLng] = useState(122.6);
     const [zoom, setZoom] = useState(5);
+    const [legendValues, setLegendValues] = useState([]);
     const classes = useStyles();
 
     // Create the stop values for the legend based on max values per year
     const createStops = (year) => {
         const maxVals = { '2018': 110000, '2019': 112000, '2020': 114000};
         var list = [];
-        for (let i = 0; i < 5; i++) {
-            let lb = (i * maxVals[year] / 5).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-            let ub = ((i + 1) * maxVals[year] / 5 - 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-            list.push(lb + " - " + ub);
+        if (year >= 2018 && year <= 2020) {
+            for (let i = 0; i < 5; i++) {
+                let lb = (i * maxVals[year] / 5).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                let ub = ((i + 1) * maxVals[year] / 5 - 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                list.push(lb + " - " + ub);
+            }
         }
         return list;
     } 
@@ -125,15 +128,18 @@ function ChoroplethMap(props) {
     useEffect(() => {
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
 
-        if (props.year != undefined) {
+        if (props.year != undefined && map.current.isStyleLoaded()) {
+
             layerIDs.forEach((id) => {
-                console.log(props.year)
                 if ("hogcount_" + props.year == id) {
                     map.current.setLayoutProperty(id, 'visibility', 'visible'); 
+                    setLegendValues(createStops(props.year));
                 } else {
                     map.current.setLayoutProperty(id, 'visibility', 'none');
                 }
             })
+        } else {
+            setLegendValues([]);
         }
     }, [props.year]);
 
@@ -142,7 +148,7 @@ function ChoroplethMap(props) {
     return(
         <div>
             <div ref={mapContainer}  className={classes.mapContainer}/>
-            <ChoroplethLegend values={props.year ? createStops(props.year) : []}/>
+            <ChoroplethLegend values={legendValues}/>
         </div>
     )
 }

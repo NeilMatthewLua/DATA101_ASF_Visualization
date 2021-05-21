@@ -52,7 +52,7 @@ function SideBar(props) {
     ];
 
     useEffect(() => {
-        if (yearChoice == null) {
+        if (yearChoice == null && menuID != 1) {
             setIsButtonDisabled(true); 
         }
         else if ((menuID == 1 || menuID == 2 && checkedBar) && regionList.length == 0) {
