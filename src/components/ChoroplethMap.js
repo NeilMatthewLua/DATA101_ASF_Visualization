@@ -7,7 +7,7 @@ import ChoroplethLegend from './ChoroplethLegend';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoidmlzc2FyaW9uIiwiYSI6ImNrbzJsNXZsMjAycGIydm8yaTZqN2RnazIifQ.697-DKrs6BxhhJ3dQjYFbA';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
     mapContainer: {
         height: '80vh',
         width: '100%',
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
         margin: '12px',
         borderRadius: '4px'
     }
-}));
+});
 
 const stops = {
     "2018": [
@@ -94,6 +94,29 @@ function ChoroplethMap(props) {
 
     useEffect(() => {
         if (!map.current) return; // wait for map to initialize
+        
+        let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
+
+        if (map.current.isStyleLoaded()) {
+            if(props.menu == 1) {
+                map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
+                layerIDs.forEach((id) => {
+                    map.current.setLayoutProperty(id, 'visibility', 'none');
+                })
+                map.current.setLayoutProperty('regions', 'visibility', 'none'); 
+            }
+            else {
+                map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
+                layerIDs.forEach((id) => {
+                    map.current.setLayoutProperty(id, 'visibility', 'none');
+                })
+                map.current.setLayoutProperty('municities', 'visibility', 'none'); 
+            }
+        }
+    }, [props.menu])
+
+    useEffect(() => {
+        if (!map.current) return; // wait for map to initialize
         map.current.on('move', () => {
             setLng(map.current.getCenter().lng.toFixed(4));
             setLat(map.current.getCenter().lat.toFixed(4));
@@ -147,7 +170,12 @@ function ChoroplethMap(props) {
     return(
         <div>
             <div ref={mapContainer}  className={classes.mapContainer}/>
-            <ChoroplethLegend values={legendValues}/>
+            {
+                props.menu == 1 ?
+                    null
+                :
+                    <ChoroplethLegend values={legendValues}/>
+            }
         </div>
     )
 }

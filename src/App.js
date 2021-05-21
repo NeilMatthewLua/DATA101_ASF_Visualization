@@ -99,19 +99,17 @@ function App() {
         </Grid>
         <Grid item xs={7}>
           { 
-            menuID == 1 ?
-              <MuniMap />  
-            :
-              !hogCountView ?
-                <ChoroplethMap 
-                  year={yearData} 
-                  onClickRegion={setSidebarChartData}
-                  isUpdate={updateMap}/> 
-              :  
-                <HorizontalBarChart  
-                  data={chartData} 
-                  year={yearData}
-                />
+            !hogCountView ?
+              <ChoroplethMap
+                menu={menuID} 
+                year={yearData} 
+                onClickRegion={setSidebarChartData}
+                isUpdate={updateMap}/> 
+            :  
+              <HorizontalBarChart  
+                data={chartData} 
+                year={yearData}
+              />
           }
         </Grid>
       </Grid>
