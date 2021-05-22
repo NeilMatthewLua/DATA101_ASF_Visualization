@@ -57,9 +57,9 @@ import './d3Tip.css';
     const palette = ["#FDBE85", "#FD8D3C", "#D94701"];
 
     useEffect(() => {
-        if (props.year != undefined)
+        if (props.year != undefined && props.isVisible && props.data.length > 0)
             setChosenYears([props.year]);
-    }, [props.year]);
+    }, [props.data]);
 
     // D3 code to be rendered inside svg
     const ref = useD3(
@@ -245,7 +245,9 @@ import './d3Tip.css';
  
  
 HorizontalBarChart.propTypes = {
-    data: PropTypes.array
+    data: PropTypes.array,
+    year: PropTypes.string, 
+    isUpdate: PropTypes.bool
 }
  
 export default HorizontalBarChart;
