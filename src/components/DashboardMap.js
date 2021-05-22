@@ -232,6 +232,34 @@ function DashboardMap(props) {
                 map.current.setFilter('highlightmuni', muniFilter);
                 map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
                 // }
+                
+                // Set pointers 
+                map.current.on('mouseenter', 'hogcount_2018', function () {
+                    map.current.getCanvas().style.cursor = 'pointer';
+                });
+                map.current.on('mouseenter', 'hogcount_2019', function () {
+                    map.current.getCanvas().style.cursor = 'pointer';
+                });
+                map.current.on('mouseenter', 'hogcount_2020', function () {
+                    map.current.getCanvas().style.cursor = 'pointer';
+                });
+                map.current.on('mouseenter', 'asf_2020', function () {
+                    map.current.getCanvas().style.cursor = 'pointer';
+                });
+                     
+                // Change it back to a pointer when it leaves.
+                map.current.on('mouseleave', 'hogcount_2018', function () {
+                    map.current.getCanvas().style.cursor = '';
+                });
+                map.current.on('mouseleave', 'hogcount_2019', function () {
+                    map.current.getCanvas().style.cursor = '';
+                });
+                map.current.on('mouseleave', 'hogcount_2020', function () {
+                    map.current.getCanvas().style.cursor = '';
+                });
+                map.current.on('mouseleave', 'asf_2020', function () {
+                    map.current.getCanvas().style.cursor = '';
+                });
             })
         });
 
