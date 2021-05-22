@@ -70,7 +70,6 @@ function App() {
   }
 
   useEffect(() => {
-    console.log("🚀 ~ file: App.js ~ line 85 ~ App ~ menuID", menuID)
     setSidebarChartData(null);
     if (menuID == 1) {
       setHogCountView(false);

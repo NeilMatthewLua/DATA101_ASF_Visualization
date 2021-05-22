@@ -58,7 +58,6 @@ function DashboardMap(props) {
     const [lat, setLat] = useState(12.45);
     const [lng, setLng] = useState(122.6);
     const [zoom, setZoom] = useState(5);
-    const [toolTip, setToolTip] = useState(null);
     const [legendValues, setLegendValues] = useState([]);
     const classes = useStyles();
 
@@ -85,11 +84,10 @@ function DashboardMap(props) {
         // Retrieve layer details
         var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['asf_2020', 'hog_count'] });
 
-        console.log("🚀 ~ file: ChoroplethMap.js ~ line 163 ~ map.current.on ~ regionData", regionData)
         // Check queried data
-        if (regionData[0]) {
+        if (regionData[0] && regionData[1]) {
             // Update data to be used for sidebar chart
-            props.onClickRegion(regionData[1].properties);
+            props.onClickRegion(regionData[regionData.length-1].properties);
 
             // Add a tooltip
             var description = "";
@@ -97,25 +95,28 @@ function DashboardMap(props) {
             description += "<div><b>Municipality:</b> " + regionData[0].properties.Municipality + "</div>";
             description += "<div><b>Zone Category:</b> " + regionData[0].properties['Zone Category'] + "</div>";
             
-            var popup = new mapboxgl.Popup()
+            var toolTips = document.getElementsByClassName('toolTip');
+            for (let i = 0; i < toolTips.length; i++) {
+                toolTips[i].remove();
+            }
+            new mapboxgl.Popup({
+                className: 'toolTip',
+                closeOnMove: true
+            })
             .setLngLat(e.lngLat)
             .setHTML(description)
             .addTo(map.current);
-
-            setToolTip(popup);
         }
     }
 
     const regionListener = (e) => {
         // Retrieve layer details
         var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['hogcount_2018', 'hogcount_2019', 'hogcount_2020' ]});
-        console.log("🚀 ~ file: ChoroplethMap.js ~ line 161 ~ map.current.on ~ regionData", regionData)
 
         // Check queried data
         if (regionData[0]) {
             // Update data to be used for sidebar chart
             props.onClickRegion(regionData[0].properties);
-            console.log("🚀 ~ file: ChoroplethMap.js ~ line 195 ~ map.current.on ~ regionData[0].properties", regionData[0].properties)
             var selectedYear = regionData[0].layer.id.split("_")[1];
 
             // Add a tooltip
@@ -123,17 +124,65 @@ function DashboardMap(props) {
             description += "<div><b>Region Name:</b> " + regionData[0].properties.Region + "</div>";
             description += "<div><b>Hog production (in metric tons):</b> " + regionData[0].properties["production_"+selectedYear].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + "</div>";
             
-            var popup = new mapboxgl.Popup()
+            var toolTips = document.getElementsByClassName('toolTip');
+            for (let i = 0; i < toolTips.length; i++) {
+                toolTips[i].remove();
+            }
+            new mapboxgl.Popup({
+                className: 'toolTip',
+                closeOnMove: true
+            })
             .setLngLat(e.lngLat)
             .setHTML(description)
             .addTo(map.current);
-            
-            setToolTip(popup);
         }
+    }
+
+    const highlightMuni = (e) => {
+        // set bbox as 5px reactangle area around clicked point
+        var bbox = [
+            [e.point.x - 5, e.point.y - 5],
+            [e.point.x + 5, e.point.y + 5]
+        ];
+        var features = map.current.queryRenderedFeatures(bbox, {
+            layers: ["asf_2020"]
+        });
+        
+        var filter = features.reduce(
+                function (memo, feature) {
+                    memo.push(feature.properties.Province);
+                return memo;
+            },
+            ['in', "Province"]
+        );
+        map.current.setFilter('highlightmuni', filter);
+        map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
+    }
+
+    const highlightRegion = (e) => {
+        // set bbox as 5px reactangle area around clicked point
+        var bbox = [
+            [e.point.x - 5, e.point.y - 5],
+            [e.point.x + 5, e.point.y + 5]
+        ];
+        var features = map.current.queryRenderedFeatures(bbox, {
+            layers: ["hogcount_2018", "hogcount_2019", "hogcount_2020"]
+        });
+        
+        var filter = features.reduce(
+                function (memo, feature) {
+                    memo.push(feature.properties.Region);
+                return memo;
+            },
+            ['in', "Region"]
+        );
+        map.current.setFilter('highlight', filter);
+        map.current.setLayoutProperty('highlight', 'visibility', 'visible'); 
     }
 
     useEffect(() => {
         if (map.current) return; // wait for map to initialize
+
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/vissarion/ckowziiyp0vfv18pjhdv5s425',
@@ -146,116 +195,125 @@ function DashboardMap(props) {
 
         map.current.on('load', (e) => {
             // Create highlight onclick
-            map.current.on('click', function (e) {
+            map.current.on('click', (e) => {
                 // set bbox as 5px reactangle area around clicked point
                 var bbox = [
                     [e.point.x - 5, e.point.y - 5],
                     [e.point.x + 5, e.point.y + 5]
                 ];
-                var features = map.current.queryRenderedFeatures(bbox, {
-                    layers: ["hogcount_2018", "hogcount_2019", "hogcount_2020"]
-                });
-                
-                // Run through the selected features and set a filter
-                // to match features with unique FIPS codes to activate
-                // the `counties-highlighted` layer.
-                var filter = features.reduce(
-                        function (memo, feature) {
-                            memo.push(feature.properties.Region);
-                        return memo;
-                    },
-                    ['in', "Region"]
-                );
-                console.log(filter);
-                map.current.setFilter('highlight', filter);
-                map.current.setLayoutProperty('highlight', 'visibility', 'visible'); 
-                console.log(map.current.getLayer('highlight'));   
-            });
+
+                // if(props.menu == 1) {
+                //     var features = map.current.queryRenderedFeatures(bbox, {
+                //         layers: ["asf_2020"]
+                //     });
+                    
+                //     var filter = features.reduce(
+                //             function (memo, feature) {
+                //                 memo.push(feature.properties.Province);
+                //             return memo;
+                //         },
+                //         ['in', "Province"]
+                //     );
+                //     map.current.setFilter('highlightmuni', filter);
+                //     map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
+                // }
+                // else {
+                    var features = map.current.queryRenderedFeatures(bbox, {
+                        layers: ["hogcount_2018", "hogcount_2019", "hogcount_2020"]
+                    });
+                    var munifeatures = map.current.queryRenderedFeatures(bbox, {
+                        layers: ["asf_2020"]
+                    });
+                    
+                    var filter = features.reduce(
+                            function (memo, feature) {
+                                memo.push(feature.properties.Region);
+                            return memo;
+                        },
+                        ['in', "Region"]
+                    );
+
+                    var munifilter = munifeatures.reduce(
+                            function (munimemo, munifeature) {
+                                munimemo.push(munifeature.properties.Province);
+                            return munimemo;
+                        },
+                        ['in', "Province"]
+                    );
+                    map.current.setFilter('highlight', filter);
+                    map.current.setLayoutProperty('highlight', 'visibility', 'visible'); 
+                    
+                    map.current.setFilter('highlightmuni', munifilter);
+                    map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
+                // }
+            })
         });
+
     }, []);
 
     useEffect(() => {
         if (!map.current || !map.current.isStyleLoaded()) return; 
+        
+        var toolTips = document.getElementsByClassName('toolTip');
+        if(toolTips.length > 0) {
+            for (let i = 0; i < toolTips.length; i++) {
+                toolTips[i].remove();
+            }
+        }
+        
+        setLegendValues([]);
+        
+        map.current.off(regionListener, 'click');
+        map.current.off(muniListener, 'click');
 
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
 
         console.log(map.current.getLayer('highlight'));
+
+        layerIDs.forEach((id) => {
+            map.current.setLayoutProperty(id, 'visibility', 'none');
+        })
+        map.current.setLayoutProperty('asf_2020', 'visibility', 'none');
         if(props.menu == 1) {
             map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
-            layerIDs.forEach((id) => {
-                map.current.setLayoutProperty(id, 'visibility', 'none');
-            })
             map.current.setLayoutProperty('regions', 'visibility', 'none'); 
-            map.current.setLayoutProperty('asf_2020', 'visibility', 'none'); 
             map.current.setLayoutProperty('highlight', 'visibility', 'none');
         }
         else {
+            map.current.setLayoutProperty('highlightmuni', 'visibility', 'none');
             map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
-            layerIDs.forEach((id) => {
-                map.current.setLayoutProperty(id, 'visibility', 'none');
-            })
             map.current.setLayoutProperty('municities', 'visibility', 'none'); 
-            map.current.setLayoutProperty('asf_2020', 'visibility', 'none');
-        }
-    }, [map.current, props.menu]);
-
-    useEffect(() => {
-        if (!map.current) return; // wait for map to initialize
-        
-        let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
-
-        if (map.current.isStyleLoaded()) {
-            if(props.menu == 1) {
-                console.log("🚀 MENU = 1");
-                map.current.off(regionListener, 'click');
-
-                map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
-                layerIDs.forEach((id) => {
-                    map.current.setLayoutProperty(id, 'visibility', 'none');
-                })
-                map.current.setLayoutProperty('regions', 'visibility', 'none'); 
-                map.current.setLayoutProperty('asf_2020', 'visibility', 'none'); 
-
-                map.current.on('click', (e) => muniListener(e));
-            }
-            else {
-                console.log("🚀 MENU = 2");
-                map.current.off(muniListener, 'click');
-
-                map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
-                layerIDs.forEach((id) => {
-                    map.current.setLayoutProperty(id, 'visibility', 'none');
-                })
-                map.current.setLayoutProperty('municities', 'visibility', 'none'); 
-                map.current.setLayoutProperty('asf_2020', 'visibility', 'none');
-
-                map.current.on('click', (e) => regionListener(e));
-            }
-        }
-        
-        if(toolTip != null) {
-            toolTip.remove();
         }
 
-    }, [props.menu])
+        map.current.off(regionListener, 'click');
+        map.current.off(muniListener, 'click');
+
+    }, [props.menu]);
+
 
     // Set visibility of layer based on chosen year for visualization
     useEffect(() => {
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
-
+        
+        if (!map.current || !map.current.isStyleLoaded()) return; // wait for map to initialize
+        
         if (props.menu == 1) {
             if(props.chartData.length > 0 && map.current.isStyleLoaded()) {
-                console.log("🚀 ~ file: ChoroplethMap.js ~ line 170 ~ useEffect ~ props.chartData", props.chartData)
+                map.current.off(regionListener, 'click');
+                map.current.off(muniListener, 'click');
                 map.current.setLayoutProperty(
                     'asf_2020',
                     'visibility',
                     'visible'
                 );
                 map.current.setFilter('asf_2020', ['match', ['get', 'Region'], props.chartData, true, false]);
+                map.current.on('click', (e) => muniListener(e));
             }
         }
         else {
             if (props.year != undefined && map.current.isStyleLoaded()) {
+                map.current.off(regionListener, 'click');
+                map.current.off(muniListener, 'click');
                 layerIDs.forEach((id) => {
                     if ("hogcount_" + props.year == id) {
                         map.current.setLayoutProperty(id, 'visibility', 'visible'); 
@@ -264,6 +322,7 @@ function DashboardMap(props) {
                         map.current.setLayoutProperty(id, 'visibility', 'none');
                     }
                 })
+                map.current.on('click', (e) => regionListener(e));
             } else {
                 setLegendValues([]);
             }
