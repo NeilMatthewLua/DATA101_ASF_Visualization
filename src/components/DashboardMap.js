@@ -202,49 +202,35 @@ function DashboardMap(props) {
                     [e.point.x + 5, e.point.y + 5]
                 ];
 
-                // if(props.menu == 1) {
-                //     var features = map.current.queryRenderedFeatures(bbox, {
-                //         layers: ["asf_2020"]
-                //     });
+                var muniFeatures = map.current.queryRenderedFeatures(bbox, {
+                    layers: ["asf_2020"]
+                });
+                
+                var regionFeatures = map.current.queryRenderedFeatures(bbox, {
+                    layers: ["hogcount_2018", "hogcount_2019", "hogcount_2020"]
+                });
                     
-                //     var filter = features.reduce(
-                //             function (memo, feature) {
-                //                 memo.push(feature.properties.Province);
-                //             return memo;
-                //         },
-                //         ['in', "Province"]
-                //     );
-                //     map.current.setFilter('highlightmuni', filter);
-                //     map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
-                // }
-                // else {
-                    var features = map.current.queryRenderedFeatures(bbox, {
-                        layers: ["hogcount_2018", "hogcount_2019", "hogcount_2020"]
-                    });
-                    var munifeatures = map.current.queryRenderedFeatures(bbox, {
-                        layers: ["asf_2020"]
-                    });
-                    
-                    var filter = features.reduce(
-                            function (memo, feature) {
-                                memo.push(feature.properties.Region);
-                            return memo;
-                        },
-                        ['in', "Region"]
-                    );
+                var regionFilter = regionFeatures.reduce(
+                        function (memo, feature) {
+                            memo.push(feature.properties.Region);
+                        return memo;
+                    },
+                    ['in', "Region"]
+                );
 
-                    var munifilter = munifeatures.reduce(
-                            function (munimemo, munifeature) {
-                                munimemo.push(munifeature.properties.Province);
-                            return munimemo;
-                        },
-                        ['in', "Province"]
-                    );
-                    map.current.setFilter('highlight', filter);
-                    map.current.setLayoutProperty('highlight', 'visibility', 'visible'); 
-                    
-                    map.current.setFilter('highlightmuni', munifilter);
-                    map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
+                var muniFilter = muniFeatures.reduce(
+                        function (munimemo, munifeature) {
+                            munimemo.push(munifeature.properties.Municipality);
+                        return munimemo;
+                    },
+                    ['in', "Municipality"]
+                );
+                
+                map.current.setFilter('highlight', regionFilter);
+                map.current.setLayoutProperty('highlight', 'visibility', 'visible'); 
+                
+                map.current.setFilter('highlightmuni', muniFilter);
+                map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
                 // }
             })
         });
