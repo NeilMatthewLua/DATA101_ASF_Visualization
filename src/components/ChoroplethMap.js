@@ -260,7 +260,7 @@ function ChoroplethMap(props) {
             map.current.on('mouseleave', 'hogcount_2018', function () {
                 map.current.getCanvas().style.cursor = '';
             });
-            map.current.on('mouseleave', 'hogcount_20', function () {
+            map.current.on('mouseleave', 'hogcount_2019', function () {
                 map.current.getCanvas().style.cursor = '';
             });
             map.current.on('mouseleave', 'hogcount_2020', function () {
