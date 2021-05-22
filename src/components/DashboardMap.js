@@ -1,3 +1,28 @@
+/**
+ * ------------------------------------------------------------------------------------------
+ * [COMPONENT]
+ * @function DashboardMap   -   Map of the dashboard
+ *                                  
+ *
+ * #HOW TO CALL:
+ *      <DashboardMap   menu
+ *                      year 
+ *                      chartData
+ *                      onClickRegion
+ *                      isUpdate />
+ *
+ *    @prop { Number }     menu                - menu ID of the chosen function (i.e. containment zone, hog count)
+ *    @prop { Number }     year                - chosen year to visualize for HOG COUNT CHOROPLETH
+ *    @prop { Array }      chartData           - chosen regions to display for CONTAIMENT ZONE, HOG COUNT BAR CHART
+ *    @prop { Function }   onClickRegion       - function handler to display which region data on the side bar chart
+ *    @prop { Bool }       isUpdate            - trigger state to handle map revisualization
+ * 
+ * USED IN:
+ * App.js
+ *
+ * ------------------------------------------------------------------------------------------
+ */
+
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -27,31 +52,7 @@ const useStyles = makeStyles({
     }
 });
 
-const stops = {
-    "2018": [
-        [0, 21879],
-        [21880, 43759],
-        [43760, 65639],
-        [65640, 87519],
-        [87520, 109400]
-    ],
-    "2019": [
-        [0, 22319],
-        [22320, 44639],
-        [44640, 66959],
-        [66960, 89279],
-        [89280, 111603]
-    ],
-    "2020": [
-        [0, 22820],
-        [22821, 45641],
-        [45642, 68462],
-        [68463, 91283],
-        [91284, 114106]
-    ],
-}
-
-function ChoroplethMap(props) {
+function DashboardMap(props) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lat, setLat] = useState(12.45);
@@ -80,6 +81,57 @@ function ChoroplethMap(props) {
         [132.10478702271024, 23.622907720786323] // Southwest coordinates
     ];
 
+    const muniListener = (e) => {
+        // Retrieve layer details
+        var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['asf_2020', 'hog_count'] });
+
+        console.log("🚀 ~ file: ChoroplethMap.js ~ line 163 ~ map.current.on ~ regionData", regionData)
+        // Check queried data
+        if (regionData[0]) {
+            // Update data to be used for sidebar chart
+            props.onClickRegion(regionData[1].properties);
+
+            // Add a tooltip
+            var description = "";
+            description += "<div><b>Region Name:</b> " + regionData[0].properties.Region + "</div>";
+            description += "<div><b>Municipality:</b> " + regionData[0].properties.Municipality + "</div>";
+            description += "<div><b>Zone Category:</b> " + regionData[0].properties['Zone Category'] + "</div>";
+            
+            var popup = new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(description)
+            .addTo(map.current);
+
+            setToolTip(popup);
+        }
+    }
+
+    const regionListener = (e) => {
+        // Retrieve layer details
+        var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['hogcount_2018', 'hogcount_2019', 'hogcount_2020' ]});
+        console.log("🚀 ~ file: ChoroplethMap.js ~ line 161 ~ map.current.on ~ regionData", regionData)
+
+        // Check queried data
+        if (regionData[0]) {
+            // Update data to be used for sidebar chart
+            props.onClickRegion(regionData[0].properties);
+            console.log("🚀 ~ file: ChoroplethMap.js ~ line 195 ~ map.current.on ~ regionData[0].properties", regionData[0].properties)
+            var selectedYear = regionData[0].layer.id.split("_")[1];
+
+            // Add a tooltip
+            var description = "";
+            description += "<div><b>Region Name:</b> " + regionData[0].properties.Region + "</div>";
+            description += "<div><b>Hog production (in metric tons):</b> " + regionData[0].properties["production_"+selectedYear].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + "</div>";
+            
+            var popup = new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(description)
+            .addTo(map.current);
+            
+            setToolTip(popup);
+        }
+    }
+
     useEffect(() => {
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
@@ -95,22 +147,27 @@ function ChoroplethMap(props) {
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
 
         map.current.on('load', () => {
-            console.log("🚀 ~ file: ChoroplethMap.js ~ line 98 ~ useEffect ~ props.menu", props.menu) 
+            layerIDs.forEach((id) => {
+                map.current.setLayoutProperty(id, 'visibility', 'none');
+            })
+            map.current.setLayoutProperty('asf_2020', 'visibility', 'none'); 
+            
             if(props.menu == 1) {
                 map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
-                layerIDs.forEach((id) => {
-                    map.current.setLayoutProperty(id, 'visibility', 'none');
-                })
                 map.current.setLayoutProperty('regions', 'visibility', 'none'); 
-                map.current.setLayoutProperty('asf_2020', 'visibility', 'none'); 
+                
+                console.log("🚀 MENU = 1 LOADS");
+                // On map click
+                map.current.on('click', (e) => muniListener(e));
             }
             else {
-                map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
-                layerIDs.forEach((id) => {
-                    map.current.setLayoutProperty(id, 'visibility', 'none');
-                })
                 map.current.setLayoutProperty('municities', 'visibility', 'none'); 
-                map.current.setLayoutProperty('asf_2020', 'visibility', 'none');
+                map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
+
+                console.log("🚀 MENU = 2 LOADS");
+                // On map click
+                map.current.on('click', (e) => regionListener(e));
+            }
 
                 // map.current.addLayer(
                 //     {
@@ -150,7 +207,6 @@ function ChoroplethMap(props) {
                      
                 //     map.setFilter('regions-highlighted', filter);
                 // });
-            }
         })
     }, []);
 
@@ -161,113 +217,38 @@ function ChoroplethMap(props) {
 
         if (map.current.isStyleLoaded()) {
             if(props.menu == 1) {
+                console.log("🚀 MENU = 1");
+                map.current.off(regionListener, 'click');
+
                 map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
                 layerIDs.forEach((id) => {
                     map.current.setLayoutProperty(id, 'visibility', 'none');
                 })
                 map.current.setLayoutProperty('regions', 'visibility', 'none'); 
                 map.current.setLayoutProperty('asf_2020', 'visibility', 'none'); 
+
+                map.current.on('click', (e) => muniListener(e));
             }
             else {
+                console.log("🚀 MENU = 2");
+                map.current.off(muniListener, 'click');
+
                 map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
                 layerIDs.forEach((id) => {
                     map.current.setLayoutProperty(id, 'visibility', 'none');
                 })
                 map.current.setLayoutProperty('municities', 'visibility', 'none'); 
-                map.current.setLayoutProperty('asf_2020', 'visibility', 'none'); 
+                map.current.setLayoutProperty('asf_2020', 'visibility', 'none');
+
+                map.current.on('click', (e) => regionListener(e));
             }
         }
-
+        
         if(toolTip != null) {
             toolTip.remove();
         }
+
     }, [props.menu])
-
-    useEffect(() => {
-        if (!map.current) return; // wait for map to initialize
-        map.current.on('move', () => {
-            setLng(map.current.getCenter().lng.toFixed(4));
-            setLat(map.current.getCenter().lat.toFixed(4));
-            setZoom(map.current.getZoom().toFixed(2));
-        });
-
-        console.log("🚀 ~ file: ChoroplethMap.js ~ line 156 ~ useEffect ~ props.menu", props.menu)
-        if (props.menu == 1) {
-            // On map click
-            map.current.on('click', (e) => {
-                // Retrieve layer details
-                var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['hog_count','asf_2020']});
-
-                // Check queried data
-                if (regionData[1]) {
-                    console.log("🚀 ~ file: ChoroplethMap.js ~ line 163 ~ map.current.on ~ regionData", regionData)
-                    // Update data to be used for sidebar chart
-                    props.onClickRegion(regionData[0].properties);
-
-                    // Add a tooltip
-                    var description = "";
-                    description += "<div><b>Region Name:</b> " + regionData[1].properties.Region + "</div>";
-                    description += "<div><b>Municipality:</b> " + regionData[1].properties.Municipality + "</div>";
-                    description += "<div><b>Zone Category:</b> " + regionData[1].properties['Zone Category'] + "</div>";
-                    
-                    var popup = new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML(description)
-                    .addTo(map.current);
-                    
-                    setToolTip(popup);
-                }
-            });
-        }
-        else {
-            // On map click
-            map.current.on('click', (e) => {
-                // Retrieve layer details
-                var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['hogcount_2018', 'hogcount_2019', 'hogcount_2020' ]});
-                console.log("🚀 ~ file: ChoroplethMap.js ~ line 161 ~ map.current.on ~ regionData", regionData)
-    
-                // Check queried data
-                if (regionData[0]) {
-                    // Update data to be used for sidebar chart
-                    props.onClickRegion(regionData[0].properties);
-                    console.log("🚀 ~ file: ChoroplethMap.js ~ line 195 ~ map.current.on ~ regionData[0].properties", regionData[0].properties)
-                    var selectedYear = regionData[0].layer.id.split("_")[1];
-                    // Add a tooltip
-                    var description = "";
-                    description += "<div><b>Region Name:</b> " + regionData[0].properties.Region + "</div>";
-                    description += "<div><b>Hog production (in metric tons):</b> " + regionData[0].properties["production_"+selectedYear].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + "</div>";
-                    
-                    var popup = new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML(description)
-                    .addTo(map.current);
-                    
-                    setToolTip(popup);
-                }
-            });
-
-            map.current.on('mouseenter', 'hogcount_2018', function () {
-                map.current.getCanvas().style.cursor = 'pointer';
-            });
-            map.current.on('mouseenter', 'hogcount_2019', function () {
-                map.current.getCanvas().style.cursor = 'pointer';
-            });
-            map.current.on('mouseenter', 'hogcount_2020', function () {
-                map.current.getCanvas().style.cursor = 'pointer';
-            });
-                 
-            // Change it back to a pointer when it leaves.
-            map.current.on('mouseleave', 'hogcount_2018', function () {
-                map.current.getCanvas().style.cursor = '';
-            });
-            map.current.on('mouseleave', 'hogcount_20', function () {
-                map.current.getCanvas().style.cursor = '';
-            });
-            map.current.on('mouseleave', 'hogcount_2020', function () {
-                map.current.getCanvas().style.cursor = '';
-            });
-        }
-    }, [map.current]);
 
     // Set visibility of layer based on chosen year for visualization
     useEffect(() => {
@@ -301,7 +282,6 @@ function ChoroplethMap(props) {
     }, [props.isUpdate]);
 
     
-
     return(
         <div>
             <div ref={mapContainer}  className={classes.mapContainer}/>
@@ -315,8 +295,12 @@ function ChoroplethMap(props) {
     )
 }
 
-ChoroplethMap.propTypes = {
-    year: PropTypes.string
+DashboardMap.propTypes = {
+    menu: PropTypes.number,
+    year: PropTypes.number,
+    chartData: PropTypes.array,
+    onClickRegion: PropTypes.func,
+    isUpdate: PropTypes.bool
 }
 
-export default ChoroplethMap;
+export default DashboardMap;

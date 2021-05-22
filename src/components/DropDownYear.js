@@ -1,4 +1,24 @@
-import React, { useState } from "react";
+/**
+ * ------------------------------------------------------------------------------------------
+ * [COMPONENT]
+ * @function DropDownYear   -   Dropdown for region selection
+ *                                  
+ *
+ * #HOW TO CALL:
+ *      <DropDownYear   yearList
+ *                      handleChange />
+ *
+ *    @prop { Array }      yearList           - chosen years to display for HOG COUNT CHOROPLETH, HOG COUNT BAR CHART
+ *    @prop { Function }   handleChange       - function handler to display which region data
+ * 
+ * USED IN:
+ * SideBar.js
+ *
+ * ------------------------------------------------------------------------------------------
+ */
+
+import React from "react";
+import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
 import { Input, InputLabel, MenuItem, FormControl, ListItemText, Select, Tooltip  } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
@@ -79,6 +99,12 @@ function DropDownYear(props) {
             </Tooltip>
         </div>
     )
+}
+
+DropDownYear.propTypes = {
+    menu: PropTypes.number,
+    regionList: PropTypes.array,
+    handleChange: PropTypes.func,
 }
 
 export default DropDownYear;

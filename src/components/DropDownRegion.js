@@ -1,4 +1,26 @@
-import React, { useEffect, useState } from "react";
+/**
+ * ------------------------------------------------------------------------------------------
+ * [COMPONENT]
+ * @function DropDownRegion   -   Dropdown for region selection
+ *                                  
+ *
+ * #HOW TO CALL:
+ *      <DropDownRegion menu
+ *                      regionList
+ *                      handleChange />
+ *
+ *    @prop { Number }     menu               - menu ID of the chosen function (i.e. containment zone, hog count)
+ *    @prop { Array }      regionList         - chosen regions to display for CONTAIMENT ZONE, HOG COUNT BAR CHART
+ *    @prop { Function }   handleChange       - function handler to display which region data
+ * 
+ * USED IN:
+ * SideBar.js
+ *
+ * ------------------------------------------------------------------------------------------
+ */
+
+import React from "react";
+import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
 import { Checkbox, Input, InputLabel, MenuItem, FormControl, ListItemText, ListSubheader, Select, Tooltip } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
@@ -139,6 +161,12 @@ function DropDownRegion(props) {
             </Tooltip>
         </div>
     )
+}
+
+DropDownRegion.propTypes = {
+    menu: PropTypes.number,
+    regionList: PropTypes.array,
+    handleChange: PropTypes.func,
 }
 
 export default DropDownRegion;

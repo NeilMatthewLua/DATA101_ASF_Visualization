@@ -1,3 +1,28 @@
+/**
+ * ------------------------------------------------------------------------------------------
+ * [COMPONENT]
+ * @function SideBar   -   Dropdown for region selection
+ *                                  
+ *
+ * #HOW TO CALL:
+ *      <SideBar   onRegionChange
+ *                      onYearChange 
+ *                      onHogViewChange
+ *                      onMenuChange
+ *                      onVisualize />
+ *
+ *    @prop { Function }   onRegionChange     - function handler on region selection change
+ *    @prop { Function }   onYearChange       - function handler on year selection change
+ *    @prop { Function }   onHogViewChange    - function handler on hog count view change (choropleth map vs horizontal bar chart)
+ *    @prop { Function }   onMenuChange       - function handler on menu change
+ *    @prop { Function }   onVisualize        - function handler to display the selected region hog count on the side bar chart
+ * 
+ * USED IN:
+ * App.js
+ *
+ * ------------------------------------------------------------------------------------------
+ */
+
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
@@ -36,8 +61,6 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-
-
 function SideBar(props) {
     const classes = useStyles();
     const [menuID, setMenuID] = useState(1);
@@ -64,10 +87,13 @@ function SideBar(props) {
     
     const handleSwitchChange = (event) => {
         setCheckedBar(event.target.checked);
+        setRegionChange([]);
+        props.onRegionChange([]);
         props.onHogViewChange(event.target.checked);
     };
     
     const updateCurrentMenuID = (id) => {
+        console.log("🚀 ~ file: SideBar.js ~ line 72 ~ updateCurrentMenuID ~ id", id)
         setMenuID(id);
         setCheckedBar(false);
         props.onMenuChange(id);
@@ -119,9 +145,9 @@ function SideBar(props) {
             {
                 menuID == 1  || menuID == 2 && checkedBar ? 
                     <DropDownRegion 
-                        handleChange={handleRegionChange}
-                        regionList={regionList}
                         menu={menuID}
+                        regionList={regionList}
+                        handleChange={handleRegionChange}
                     />
                 :
                     null
@@ -152,7 +178,11 @@ function SideBar(props) {
 }
 
 SideBar.propTypes = {
-    onRegionChange: PropTypes.func
+    onRegionChange: PropTypes.func,
+    onYearChange: PropTypes.func,
+    onHogViewChange: PropTypes.func,
+    onMenuChange: PropTypes.func,
+    onVisualize: PropTypes.func
 }
 
 export default SideBar;

@@ -5,16 +5,18 @@
  *                                  
  *
  * #HOW TO CALL:
- *      <Snapshot       data
- *                      selectedRegions />
+ *      <HorizontalBarChart     data
+ *                              year />
  *
- *    @prop { Array }  data            - data to be rendered in the bart chart 
- *    @prop { Array }  selectedRegions - regions chosen to be rendered 
+ *    @prop { Array }   data  - data to be rendered in the bart chart 
+ *    @prop { Number }  year  - year/s to display in the horizontal bar chart
+ * 
  * USED IN:
  * App.js
  *
  * ------------------------------------------------------------------------------------------
  */
+
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
@@ -245,7 +247,8 @@ import './d3Tip.css';
  
  
 HorizontalBarChart.propTypes = {
-    data: PropTypes.array
+    data: PropTypes.array,
+    year: PropTypes.number
 }
  
 export default HorizontalBarChart;

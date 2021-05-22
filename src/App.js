@@ -1,11 +1,8 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import SideBar from './components/SideBar';
-import Map from './components/Map';
-import MuniMap from './components/MuniMap';
-import ChoroplethMap from './components/ChoroplethMap';
+import DashboardMap from './components/DashboardMap';
 import SidebarChart from './components/SidebarChart';
 import HorizontalBarChart from './components/HorizontalBarChart';
 import { Grid } from '@material-ui/core';
@@ -25,16 +22,12 @@ const useStyle = makeStyles(theme => ({
     textAlign: 'center'
   },
   content: {
-    // display: 'flex',
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
     padding: "0px 40px"
   },
   sidebar: {
     display: 'flex',
     flexDirection: 'column',
     gap: '40px'
-    // justifyContent: 'space-between'
   },
   container: {
     display: 'grid',
@@ -112,7 +105,7 @@ function App() {
         <Grid item xs={7}>
           { 
             !hogCountView ?
-              <ChoroplethMap
+              <DashboardMap
                 menu={menuID} 
                 year={yearData}
                 chartData={selectedRegionsBarChart} 

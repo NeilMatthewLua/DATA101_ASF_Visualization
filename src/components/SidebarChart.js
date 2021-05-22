@@ -15,7 +15,7 @@
  *
  * ------------------------------------------------------------------------------------------
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import * as d3 from 'd3';

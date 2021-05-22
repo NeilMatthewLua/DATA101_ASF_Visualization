@@ -1,4 +1,21 @@
-import React, { useRef, useEffect, useState } from 'react';
+/**
+ * ------------------------------------------------------------------------------------------
+ * [COMPONENT]
+ * @function ChoroplethLegend   -   Choropleth legend for the hog count 
+ *                                  
+ *
+ * #HOW TO CALL:
+ *      <ChoroplethLegend   values />
+ *
+ *    @prop { Array }     values      - array of values for the legend  to display
+ * 
+ * USED IN:
+ * DashboardMap.js
+ *
+ * ------------------------------------------------------------------------------------------
+ */
+
+import React from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from '!mapbox-gl';
