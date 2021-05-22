@@ -133,7 +133,7 @@ function DashboardMap(props) {
     }
 
     useEffect(() => {
-        if (map.current) return; // initialize map only once
+        if (map.current) return; // wait for map to initialize
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/vissarion/ckowziiyp0vfv18pjhdv5s425',
@@ -143,72 +143,61 @@ function DashboardMap(props) {
             maxZoom: 13,
             maxBounds: bounds,
         });
-        
+
+        map.current.on('load', (e) => {
+            // Create highlight onclick
+            map.current.on('click', function (e) {
+                // set bbox as 5px reactangle area around clicked point
+                var bbox = [
+                    [e.point.x - 5, e.point.y - 5],
+                    [e.point.x + 5, e.point.y + 5]
+                ];
+                var features = map.current.queryRenderedFeatures(bbox, {
+                    layers: ["hogcount_2018", "hogcount_2019", "hogcount_2020"]
+                });
+                
+                // Run through the selected features and set a filter
+                // to match features with unique FIPS codes to activate
+                // the `counties-highlighted` layer.
+                var filter = features.reduce(
+                        function (memo, feature) {
+                            memo.push(feature.properties.Region);
+                        return memo;
+                    },
+                    ['in', "Region"]
+                );
+                console.log(filter);
+                map.current.setFilter('highlight', filter);
+                map.current.setLayoutProperty('highlight', 'visibility', 'visible'); 
+                console.log(map.current.getLayer('highlight'));   
+            });
+        });
+    }, []);
+
+    useEffect(() => {
+        if (!map.current || !map.current.isStyleLoaded()) return; 
+
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
 
-        map.current.on('load', () => {
+        console.log(map.current.getLayer('highlight'));
+        if(props.menu == 1) {
+            map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
             layerIDs.forEach((id) => {
                 map.current.setLayoutProperty(id, 'visibility', 'none');
             })
+            map.current.setLayoutProperty('regions', 'visibility', 'none'); 
             map.current.setLayoutProperty('asf_2020', 'visibility', 'none'); 
-            
-            if(props.menu == 1) {
-                map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
-                map.current.setLayoutProperty('regions', 'visibility', 'none'); 
-                
-                console.log("🚀 MENU = 1 LOADS");
-                // On map click
-                map.current.on('click', (e) => muniListener(e));
-            }
-            else {
-                map.current.setLayoutProperty('municities', 'visibility', 'none'); 
-                map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
-
-                console.log("🚀 MENU = 2 LOADS");
-                // On map click
-                map.current.on('click', (e) => regionListener(e));
-            }
-
-                // map.current.addLayer(
-                //     {
-                //         'id': 'regions-highlighted',
-                //         'type': 'fill',
-                //         'source': 'regions',
-                //         'source-layer': 'original',
-                //         'paint': {
-                //             'fill-outline-color': '#484896',
-                //             // 'fill-color': '#6e599f',
-                //             'fill-opacity': 0.75
-                //         },
-                //         'filter': ['in', 'Region', '']
-                //     }
-                // ); // Place polygon under these labels.
-                     
-                // map.current.on('click', function (e) {
-                //     // set bbox as 5px reactangle area around clicked point
-                //     var bbox = [
-                //         [e.point.x - 5, e.point.y - 5],
-                //         [e.point.x + 5, e.point.y + 5]
-                //     ];
-                //     var features = map.queryRenderedFeatures(bbox, {
-                //         layers: ['regions']
-                //     });
-                     
-                //     // Run through the selected features and set a filter
-                //     // to match features with unique FIPS codes to activate
-                //     // the `counties-highlighted` layer.
-                //     var filter = features.reduce(
-                //             function (memo, feature) {
-                //                 memo.push(feature.properties.Region);
-                //             return memo;
-                //         },
-                //         ['in', 'Region']
-                //     );
-                     
-                //     map.setFilter('regions-highlighted', filter);
-                // });
-        })
-    }, []);
+            map.current.setLayoutProperty('highlight', 'visibility', 'none');
+        }
+        else {
+            map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
+            layerIDs.forEach((id) => {
+                map.current.setLayoutProperty(id, 'visibility', 'none');
+            })
+            map.current.setLayoutProperty('municities', 'visibility', 'none'); 
+            map.current.setLayoutProperty('asf_2020', 'visibility', 'none');
+        }
+    }, [map.current, props.menu]);
 
     useEffect(() => {
         if (!map.current) return; // wait for map to initialize
