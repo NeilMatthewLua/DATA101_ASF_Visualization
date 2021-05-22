@@ -122,6 +122,7 @@ function App() {
               <HorizontalBarChart  
                 data={chartData} 
                 year={yearData}
+                isVisible={hogCountView}
               />
           }
         </Grid>
