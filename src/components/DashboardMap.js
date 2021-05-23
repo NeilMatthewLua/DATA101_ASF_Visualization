@@ -225,10 +225,10 @@ function DashboardMap(props) {
 
                 var muniFilter = muniFeatures.reduce(
                         function (munimemo, munifeature) {
-                            munimemo.push(munifeature.properties.Municipality);
+                            munimemo.push(munifeature.properties.ID);
                         return munimemo;
                     },
-                    ['in', "Municipality"]
+                    ['in', "ID"]
                 );
                 
                 map.current.setFilter('highlight', regionFilter);
