@@ -59,9 +59,9 @@ import './d3Tip.css';
     const palette = ["#FDBE85", "#FD8D3C", "#D94701"];
 
     useEffect(() => {
-        if (props.year != undefined)
+        if (props.year != undefined && props.isVisible && props.data.length > 0)
             setChosenYears([props.year]);
-    }, [props.year]);
+    }, [JSON.stringify(props.data)]);
 
     // D3 code to be rendered inside svg
     const ref = useD3(
@@ -183,7 +183,7 @@ import './d3Tip.css';
             })
             .on('mouseout', tip.hide);
         },
-        [props.data.length, chosenYears]
+        [JSON.stringify(props.data), chosenYears]
     );
 
     const handleChange = (event) => {
