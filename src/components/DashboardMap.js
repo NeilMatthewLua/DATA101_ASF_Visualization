@@ -196,10 +196,9 @@ function DashboardMap(props) {
         map.current.on('load', (e) => {
             // Create highlight onclick
             map.current.on('click', (e) => {
-                // set bbox as 5px reactangle area around clicked point
                 var bbox = [
-                    [e.point.x - 5, e.point.y - 5],
-                    [e.point.x + 5, e.point.y + 5]
+                    [e.point.x, e.point.y ],
+                    [e.point.x , e.point.y ]
                 ];
 
                 var muniFeatures = map.current.queryRenderedFeatures(bbox, {
@@ -232,35 +231,34 @@ function DashboardMap(props) {
                 map.current.setFilter('highlightmuni', muniFilter);
                 map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
                 // }
-                
-                // Set pointers 
-                map.current.on('mouseenter', 'hogcount_2018', function () {
-                    map.current.getCanvas().style.cursor = 'pointer';
-                });
-                map.current.on('mouseenter', 'hogcount_2019', function () {
-                    map.current.getCanvas().style.cursor = 'pointer';
-                });
-                map.current.on('mouseenter', 'hogcount_2020', function () {
-                    map.current.getCanvas().style.cursor = 'pointer';
-                });
-                map.current.on('mouseenter', 'asf_2020', function () {
-                    map.current.getCanvas().style.cursor = 'pointer';
-                });
-                     
-                // Change it back to a pointer when it leaves.
-                map.current.on('mouseleave', 'hogcount_2018', function () {
-                    map.current.getCanvas().style.cursor = '';
-                });
-                map.current.on('mouseleave', 'hogcount_2019', function () {
-                    map.current.getCanvas().style.cursor = '';
-                });
-                map.current.on('mouseleave', 'hogcount_2020', function () {
-                    map.current.getCanvas().style.cursor = '';
-                });
-                map.current.on('mouseleave', 'asf_2020', function () {
-                    map.current.getCanvas().style.cursor = '';
-                });
-            })
+            });
+            // Set pointers 
+            map.current.on('mouseenter', 'hogcount_2018', function () {
+                map.current.getCanvas().style.cursor = 'pointer';
+            });
+            map.current.on('mouseenter', 'hogcount_2019', function () {
+                map.current.getCanvas().style.cursor = 'pointer';
+            });
+            map.current.on('mouseenter', 'hogcount_2020', function () {
+                map.current.getCanvas().style.cursor = 'pointer';
+            });
+            map.current.on('mouseenter', 'asf_2020', function () {
+                map.current.getCanvas().style.cursor = 'pointer';
+            });
+                 
+            // Change it back to a pointer when it leaves.
+            map.current.on('mouseleave', 'hogcount_2018', function () {
+                map.current.getCanvas().style.cursor = '';
+            });
+            map.current.on('mouseleave', 'hogcount_2019', function () {
+                map.current.getCanvas().style.cursor = '';
+            });
+            map.current.on('mouseleave', 'hogcount_2020', function () {
+                map.current.getCanvas().style.cursor = '';
+            });
+            map.current.on('mouseleave', 'asf_2020', function () {
+                map.current.getCanvas().style.cursor = '';
+            });
         });
 
     }, []);
@@ -322,6 +320,7 @@ function DashboardMap(props) {
                 );
                 map.current.setFilter('asf_2020', ['match', ['get', 'Region'], props.chartData, true, false]);
                 map.current.on('click', (e) => muniListener(e));
+                map.current.setLayoutProperty('municities', 'visibility', 'visible');
             }
         }
         else {
@@ -337,6 +336,7 @@ function DashboardMap(props) {
                     }
                 })
                 map.current.on('click', (e) => regionListener(e));
+                map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
             } else {
                 setLegendValues([]);
             }
