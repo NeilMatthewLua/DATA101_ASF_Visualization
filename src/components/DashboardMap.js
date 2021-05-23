@@ -93,7 +93,7 @@ function DashboardMap(props) {
             // Add a tooltip
             var description = "";
             description += "<div><b>Region Name:</b> " + regionData[0].properties.Region + "</div>";
-            description += "<div><b>Municipality:</b> " + regionData[0].properties.Municipality + "</div>";
+            description += "<div><b>Municipality:</b> " + regionData[0].properties.Municipality.replace(/\uFFFD/g, '\u00f1') + "</div>";
             description += "<div><b>Zone Category:</b> " + regionData[0].properties['Zone Category'] + "</div>";
             
             var toolTips = document.getElementsByClassName('toolTip');
