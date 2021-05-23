@@ -83,6 +83,7 @@ function DashboardMap(props) {
     const muniListener = (e) => {
         // Retrieve layer details
         var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['asf_2020', 'hog_count'] });
+        console.log("🚀 ~ file: DashboardMap.js ~ line 86 ~ muniListener ~ regionData", regionData)
 
         // Check queried data
         if (regionData[0] && regionData[1]) {
@@ -138,48 +139,6 @@ function DashboardMap(props) {
         }
     }
 
-    const highlightMuni = (e) => {
-        // set bbox as 5px reactangle area around clicked point
-        var bbox = [
-            [e.point.x - 5, e.point.y - 5],
-            [e.point.x + 5, e.point.y + 5]
-        ];
-        var features = map.current.queryRenderedFeatures(bbox, {
-            layers: ["asf_2020"]
-        });
-        
-        var filter = features.reduce(
-                function (memo, feature) {
-                    memo.push(feature.properties.Province);
-                return memo;
-            },
-            ['in', "Province"]
-        );
-        map.current.setFilter('highlightmuni', filter);
-        map.current.setLayoutProperty('highlightmuni', 'visibility', 'visible'); 
-    }
-
-    const highlightRegion = (e) => {
-        // set bbox as 5px reactangle area around clicked point
-        var bbox = [
-            [e.point.x - 5, e.point.y - 5],
-            [e.point.x + 5, e.point.y + 5]
-        ];
-        var features = map.current.queryRenderedFeatures(bbox, {
-            layers: ["hogcount_2018", "hogcount_2019", "hogcount_2020"]
-        });
-        
-        var filter = features.reduce(
-                function (memo, feature) {
-                    memo.push(feature.properties.Region);
-                return memo;
-            },
-            ['in', "Region"]
-        );
-        map.current.setFilter('highlight', filter);
-        map.current.setLayoutProperty('highlight', 'visibility', 'visible'); 
-    }
-
     useEffect(() => {
         if (map.current) return; // wait for map to initialize
 
@@ -194,12 +153,15 @@ function DashboardMap(props) {
         });
 
         map.current.on('load', (e) => {
-            if(props.menu == 1) {
+            if (props.menu == 1) {
+                map.current.setLayoutProperty('regions', 'visibility', 'none'); 
                 map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
             }
-            else {
-                map.current.setLayoutProperty('regions', 'visibility', 'visible');
+            else if (props.menu == 2) {
+                map.current.setLayoutProperty('regions', 'visibility', 'visible'); 
+                map.current.setLayoutProperty('municities', 'visibility', 'none'); 
             }
+
             // Create highlight onclick
             map.current.on('click', (e) => {
                 var bbox = [
