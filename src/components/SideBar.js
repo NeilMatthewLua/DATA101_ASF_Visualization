@@ -101,6 +101,7 @@ function SideBar(props) {
     
     const handleRegionChange = (event) => {
         setRegionChange(event.target.value.sort((a, b) => (a.id > b.id) ? 1 : -1));
+        props.onRegionChange(event.target.value.sort((a, b) => (a.id > b.id) ? 1 : -1));
     };
     
     const handleYearChange = (event) => {

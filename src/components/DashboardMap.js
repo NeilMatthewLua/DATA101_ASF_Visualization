@@ -194,6 +194,12 @@ function DashboardMap(props) {
         });
 
         map.current.on('load', (e) => {
+            if(props.menu == 1) {
+                map.current.setLayoutProperty('municities', 'visibility', 'visible'); 
+            }
+            else {
+                map.current.setLayoutProperty('regions', 'visibility', 'visible');
+            }
             // Create highlight onclick
             map.current.on('click', (e) => {
                 var bbox = [
