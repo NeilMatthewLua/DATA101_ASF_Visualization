@@ -84,7 +84,6 @@ function DashboardMap(props) {
     const muniListener = (e) => {
         // Retrieve layer details
         var regionData = map.current.queryRenderedFeatures(e.point, { layers: ['asf_2020', 'hog_count'] });
-        console.log("🚀 ~ file: DashboardMap.js ~ line 86 ~ muniListener ~ regionData", regionData)
 
         // Check queried data
         if (regionData[0] && regionData[1]) {
@@ -248,8 +247,6 @@ function DashboardMap(props) {
         map.current.off(muniListener, 'click');
 
         let layerIDs = ["hogcount_2018", "hogcount_2019", "hogcount_2020"];
-
-        console.log(map.current.getLayer('highlight'));
 
         layerIDs.forEach((id) => {
             map.current.setLayoutProperty(id, 'visibility', 'none');
