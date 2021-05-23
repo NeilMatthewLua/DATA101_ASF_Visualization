@@ -1,13 +1,11 @@
 /**
  * ------------------------------------------------------------------------------------------
  * [COMPONENT]
- * @function ChoroplethLegend   -   Choropleth legend for the hog count 
+ * @function ContainmentLegend   -   Choropleth legend for the containment zone 
  *                                  
  *
  * #HOW TO CALL:
- *      <ChoroplethLegend   values />
- *
- *    @prop { Array }     values      - array of values for the legend  to display
+ *      <ContainmentLegend />
  * 
  * USED IN:
  * DashboardMap.js
@@ -47,16 +45,17 @@ const useStyles = makeStyles(theme => ({
     
 }));
 
-const palette = ["#3bfeb8", "#13eba2", "#0ad48b", "#05ac72", "#218173"];
+const palette = ["#EB1919", "#FF8080", "#FFE380", "#7EC7AE", "#218173"];
+const values = ["Infected Zone", "Buffer Zone", "Surveillance Zone", "Protected Zone", "Free Zone"];
 
-function ChoroplethLegend(props) {
+function ContainmentLegend(props) {
     const classes = useStyles();
 
     return(
         
         <div className={classes.legend}>
             <h3 style={{textAlign : "center", margin : "0px 0px 10px 0px"}}><b>Legend</b></h3>
-            {props.values.map((entry, index) => (
+            {values.map((entry, index) => (
                 <div>
                     <span className={classes.legendKey} style={{backgroundColor : palette[index]}}/>
                     { entry }
@@ -66,8 +65,6 @@ function ChoroplethLegend(props) {
     )
 }
 
-ChoroplethLegend.propTypes = {
-    values: PropTypes.array
-}
+ContainmentLegend.propTypes = {}
 
-export default ChoroplethLegend;
+export default ContainmentLegend;

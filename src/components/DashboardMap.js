@@ -29,6 +29,7 @@ import PropTypes from 'prop-types';
 import mapboxgl from '!mapbox-gl';
 import { makeStyles } from "@material-ui/core/styles";
 import ChoroplethLegend from './ChoroplethLegend';
+import ContainmentLegend from './ContainmentLegend';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoidmlzc2FyaW9uIiwiYSI6ImNrbzJsNXZsMjAycGIydm8yaTZqN2RnazIifQ.697-DKrs6BxhhJ3dQjYFbA';
 
@@ -317,7 +318,7 @@ function DashboardMap(props) {
             <div ref={mapContainer}  className={classes.mapContainer}/>
             {
                 props.menu == 1 ?
-                    null
+                    <ContainmentLegend />
                 :
                     <ChoroplethLegend values={legendValues}/>
             }
