@@ -229,7 +229,7 @@ import './d3Tip.css';
             <svg
                 ref={ref}
                 style={{
-                    height: '90%',
+                    height: '95%',
                     width: '100%',
                     marginRight: "0px",
                     marginLeft: "0px",
