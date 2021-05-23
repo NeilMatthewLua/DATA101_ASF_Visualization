@@ -141,13 +141,35 @@ function SideBar(props) {
     };
     
     const handleRegionChange = (event) => {
-        if(event.target.value.includes('All Regions') && event.target.value.length == 18) {
+        if((event.target.value.includes('All Regions') && event.target.value.length == 18 && menuID == 1)
+           || (event.target.value.includes('All Regions') && event.target.value.length == 17 && menuID == 2)) {
             setRegionChange([])
             props.onRegionChange([])
         }
-        else if (event.target.value.includes('All Regions') || (!event.target.value.includes('All Regions') && event.target.value.length == 17)) {
-            setRegionChange(allRegionList)
-            props.onRegionChange(allRegionList)
+        else if (event.target.value.includes('All Regions')) {
+            if(menuID == 1) {
+                setRegionChange(allRegionList)
+                props.onRegionChange(allRegionList)
+            }
+            else {
+                var newRegionList = [...allRegionList];
+                newRegionList.splice(1, 1);
+                setRegionChange(newRegionList);
+            }
+        }
+        else if (
+            (!event.target.value.includes('All Regions') && event.target.value.length == 17 && menuID == 1)
+            || (!event.target.value.includes('All Regions') && event.target.value.length == 16 && menuID == 2)
+            ) {
+                if(menuID == 1) {
+                    setRegionChange(allRegionList)
+                    props.onRegionChange(allRegionList)
+                }
+                else {
+                    var newRegionList = [...allRegionList];
+                    newRegionList.splice(1, 1);
+                    setRegionChange(newRegionList);
+                }
         }
         else {
             setRegionChange(event.target.value.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1));
