@@ -62,7 +62,7 @@ import './d3Tip.css';
     useEffect(() => {
         if (props.year != undefined && props.isVisible && props.data.length > 0)
             setChosenYears([props.year]);
-    }, [JSON.stringify(props.data)]);
+    }, [JSON.stringify(props.data), props.year]);
 
     // D3 code to be rendered inside svg
     const ref = useD3(
