@@ -41,7 +41,7 @@ import './d3Tip.css';
          backgroundColor: theme.palette.white,
          borderRadius: '20px',
          paddingTop: '10px',
-         height: '100%',
+         height: '80vh',
          width: '100%'
      },
      yearFilter: {
@@ -229,7 +229,7 @@ import './d3Tip.css';
             <svg
                 ref={ref}
                 style={{
-                    height: '100%',
+                    height: '95%',
                     width: '100%',
                     marginRight: "0px",
                     marginLeft: "0px",
