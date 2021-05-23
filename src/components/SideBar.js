@@ -137,6 +137,7 @@ function SideBar(props) {
     const updateCurrentMenuID = (id) => {
         setMenuID(id);
         setCheckedBar(false);
+        setYearChange();
         props.onMenuChange(id);
     };
     
