@@ -14,7 +14,6 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from '!mapbox-gl';
 import { makeStyles } from "@material-ui/core/styles";

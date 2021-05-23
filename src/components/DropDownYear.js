@@ -92,7 +92,7 @@ function DropDownYear(props) {
             </FormControl>
             <Tooltip 
                 id={`tooltip-ID-${props.type}`}
-                title={"ADD TOOLTIP HERE"}
+                title={"Select the year you want to visualize"}
                 placement="right-start"
             >
                 <HelpOutline className={classes.helpIcon}/>

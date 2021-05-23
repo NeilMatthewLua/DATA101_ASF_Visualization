@@ -98,7 +98,7 @@ function MenuBlock(props) {
                         <Tooltip
                             id={"tooltip-ID-" + block.id}
                             title={block.description}
-                            placement="right-start"
+                            placement="top"
                         >
                             <Button
                                 id={"menu-block-" + block.id}

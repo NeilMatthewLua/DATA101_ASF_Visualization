@@ -63,6 +63,7 @@ const MenuProps = {
     vertical: "top",
     horizontal: "left"
   },
+  autoFocus: false,
   getContentAnchorEl: null
 };
 
@@ -70,6 +71,7 @@ function DropDownRegion(props) {
     const classes = useStyles();
 
     const lookup = {
+        'All Regions' : -1,
         'NCR' : 0,  
         'Region I' : 1,
         'Region II' : 2,
@@ -88,6 +90,8 @@ function DropDownRegion(props) {
         'Region XIII' : 15,
         'ARMM' : 16
     };
+
+    const allRegions = {id: -1, name: 'All Regions'}
 
     const regionLuzonNCR = [
         { id: 0, name: 'NCR' },
@@ -124,6 +128,16 @@ function DropDownRegion(props) {
         { id: 15, name: 'Region XIII' },
         { id: 16, name: 'ARMM' }
     ]
+    
+    const filterList = () => {
+        var index = props.regionList.indexOf('All Regions');
+        if (index > -1 ) {
+            return props.regionList.slice(1, props.regionList.length);
+        }
+        else {
+            return props.regionList;
+        }
+    }
 
     return (
         <div className={classes.root}>
@@ -133,12 +147,17 @@ function DropDownRegion(props) {
                     labelId="dropdown-region-label"
                     id="dropdown-region"
                     multiple
-                    value={props.regionList}
+                    value={filterList()}
                     onChange={props.handleChange}
                     input={<Input />}
                     renderValue={(selected) => selected.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1).join(', ')}
                     MenuProps={MenuProps}
                 >
+                    <MenuItem key={allRegions.id} value={allRegions.name}>
+                        <Checkbox checked={props.regionList.indexOf(allRegions.name) > -1}/>
+                        <ListItemText primary={allRegions.name} />
+                    </MenuItem>
+
                     <ListSubheader disableSticky className={classes.disableClick}>Luzon</ListSubheader>
                     {
                         props.menu == 1 ? 
@@ -174,7 +193,7 @@ function DropDownRegion(props) {
             </FormControl>
             <Tooltip 
                 id={`tooltip-ID-${props.type}`}
-                title={"ADD TOOLTIP HERE"}
+                title={"Select the regions you want to visualize"}
                 placement="right-start"
                 >
                 <HelpOutline className={classes.helpIcon}/>

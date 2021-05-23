@@ -70,11 +70,12 @@ function SideBar(props) {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
       
     const menuBlockItems = [
-        { id: 1, label: 'Containment Zones', icon: ContainmentIcon, description: 'ADD TOOLTIP HERE', active: true },
-        { id: 2, label: 'Hog Count', icon: HogCountIcon, description: 'ADD TOOLTIP HERE', active: true},
+        { id: 1, label: 'Containment Zones', icon: ContainmentIcon, description: 'A geographic heat map of the containment zones of the municipalities in the Philippines', active: true },
+        { id: 2, label: 'Hog Count', icon: HogCountIcon, description: 'A choropleth map and a bar chart of the hog count production of the regions in the Philippines', active: true},
     ];
 
     const lookup = {
+        'All Regions' : -1,
         'NCR' : 0,  
         'Region I' : 1,
         'Region II' : 2,
@@ -93,6 +94,27 @@ function SideBar(props) {
         'Region XIII' : 15,
         'ARMM' : 16
     };
+
+    const allRegionList = [
+        'All Regions',
+        'NCR',  
+        'Region I',
+        'Region II',
+        'Region III',
+        'Region IV-A',
+        'Region IV-B',
+        'Region V',
+        'CAR',
+        'Region VI',
+        'Region VII',
+        'Region VIII',
+        'Region IX',
+        'Region X',
+        'Region XI',
+        'Region XII',
+        'Region XIII',
+        'ARMM',
+    ]
 
     useEffect(() => {
         if (yearChoice == null && menuID != 1) {
@@ -113,15 +135,24 @@ function SideBar(props) {
     };
     
     const updateCurrentMenuID = (id) => {
-        console.log("🚀 ~ file: SideBar.js ~ line 72 ~ updateCurrentMenuID ~ id", id)
         setMenuID(id);
         setCheckedBar(false);
         props.onMenuChange(id);
     };
     
     const handleRegionChange = (event) => {
-        setRegionChange(event.target.value.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1));
-        props.onRegionChange(event.target.value.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1));
+        if(event.target.value.includes('All Regions') && event.target.value.length == 18) {
+            setRegionChange([])
+            props.onRegionChange([])
+        }
+        else if (event.target.value.includes('All Regions') || (!event.target.value.includes('All Regions') && event.target.value.length == 17)) {
+            setRegionChange(allRegionList)
+            props.onRegionChange(allRegionList)
+        }
+        else {
+            setRegionChange(event.target.value.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1));
+            props.onRegionChange(event.target.value.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1));
+        }
     };
     
     const handleYearChange = (event) => {
