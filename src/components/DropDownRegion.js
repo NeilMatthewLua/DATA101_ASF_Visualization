@@ -69,6 +69,26 @@ const MenuProps = {
 function DropDownRegion(props) {
     const classes = useStyles();
 
+    const lookup = {
+        'NCR' : 0,  
+        'Region I' : 1,
+        'Region II' : 2,
+        'Region III' : 3,
+        'Region IV-A' : 4,
+        'Region IV-B' : 5,
+        'Region V' : 6,
+        'CAR' : 7,
+        'Region VI' : 8,
+        'Region VII' : 9,
+        'Region VIII' : 10,
+        'Region IX' : 11,
+        'Region X' : 12,
+        'Region XI' : 13,
+        'Region XII' : 14,
+        'Region XIII' : 15,
+        'ARMM' : 16
+    };
+
     const regionLuzonNCR = [
         { id: 0, name: 'NCR' },
         { id: 1, name: 'Region I' },
@@ -116,7 +136,7 @@ function DropDownRegion(props) {
                     value={props.regionList}
                     onChange={props.handleChange}
                     input={<Input />}
-                    renderValue={(selected) => selected.join(', ')}
+                    renderValue={(selected) => selected.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1).join(', ')}
                     MenuProps={MenuProps}
                 >
                     <ListSubheader disableSticky className={classes.disableClick}>Luzon</ListSubheader>

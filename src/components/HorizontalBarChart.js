@@ -10,6 +10,7 @@
  *
  *    @prop { Array }   data  - data to be rendered in the bart chart 
  *    @prop { Number }  year  - year/s to display in the horizontal bar chart
+ *    @prop { Boolean } isVisible - if bar chart is visible or not
  * 
  * USED IN:
  * App.js
@@ -59,9 +60,9 @@ import './d3Tip.css';
     const palette = ["#FDBE85", "#FD8D3C", "#D94701"];
 
     useEffect(() => {
-        if (props.year != undefined)
+        if (props.year != undefined && props.isVisible && props.data.length > 0)
             setChosenYears([props.year]);
-    }, [props.year]);
+    }, [JSON.stringify(props.data), props.year]);
 
     // D3 code to be rendered inside svg
     const ref = useD3(
@@ -183,7 +184,7 @@ import './d3Tip.css';
             })
             .on('mouseout', tip.hide);
         },
-        [props.data.length, chosenYears]
+        [JSON.stringify(props.data), chosenYears]
     );
 
     const handleChange = (event) => {
@@ -248,7 +249,8 @@ import './d3Tip.css';
  
 HorizontalBarChart.propTypes = {
     data: PropTypes.array,
-    year: PropTypes.number
+    year: PropTypes.number,
+    isVisible: PropTypes.bool
 }
  
 export default HorizontalBarChart;

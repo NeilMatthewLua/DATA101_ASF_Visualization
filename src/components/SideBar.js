@@ -74,6 +74,26 @@ function SideBar(props) {
         { id: 2, label: 'Hog Count', icon: HogCountIcon, description: 'ADD TOOLTIP HERE', active: true},
     ];
 
+    const lookup = {
+        'NCR' : 0,  
+        'Region I' : 1,
+        'Region II' : 2,
+        'Region III' : 3,
+        'Region IV-A' : 4,
+        'Region IV-B' : 5,
+        'Region V' : 6,
+        'CAR' : 7,
+        'Region VI' : 8,
+        'Region VII' : 9,
+        'Region VIII' : 10,
+        'Region IX' : 11,
+        'Region X' : 12,
+        'Region XI' : 13,
+        'Region XII' : 14,
+        'Region XIII' : 15,
+        'ARMM' : 16
+    };
+
     useEffect(() => {
         if (yearChoice == null && menuID != 1) {
             setIsButtonDisabled(true); 
@@ -100,7 +120,8 @@ function SideBar(props) {
     };
     
     const handleRegionChange = (event) => {
-        setRegionChange(event.target.value.sort((a, b) => (a.id > b.id) ? 1 : -1));
+        setRegionChange(event.target.value.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1));
+        props.onRegionChange(event.target.value.sort((a, b) => (lookup[a] > lookup[b]) ? 1 : -1));
     };
     
     const handleYearChange = (event) => {
