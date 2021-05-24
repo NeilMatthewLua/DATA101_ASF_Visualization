@@ -10,13 +10,13 @@
  *
  *    @prop  { array }      items                   -   array of menu items containing label and icon
  *                                                      data format:
- *                                                          [ { id: (from 1 to n), label: '', icon: (imported svg file) } ]
+ *                                                          [ { id: (from 1 to n), label: '', icon: (imported svg file)] } ]
  *    @prop  { function }   updateCurrentHeaderId   -   function called to pass the current id to the parent class
  *    @prop  { integer }    defaultFocus            -   id of the default focused menu block
  *                                                  
  *
  * USED IN:
- * components/snapshot/Snapshot.js
+ * SideBar.js
  *
  * ------------------------------------------------------------------------------------------
  */
@@ -98,7 +98,7 @@ function MenuBlock(props) {
                         <Tooltip
                             id={"tooltip-ID-" + block.id}
                             title={block.description}
-                            placement="right-start"
+                            placement="top"
                         >
                             <Button
                                 id={"menu-block-" + block.id}

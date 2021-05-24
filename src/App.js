@@ -1,11 +1,8 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import SideBar from './components/SideBar';
-import Map from './components/Map';
-import MuniMap from './components/MuniMap';
-import ChoroplethMap from './components/ChoroplethMap';
+import DashboardMap from './components/DashboardMap';
 import SidebarChart from './components/SidebarChart';
 import HorizontalBarChart from './components/HorizontalBarChart';
 import { Grid } from '@material-ui/core';
@@ -25,16 +22,12 @@ const useStyle = makeStyles(theme => ({
     textAlign: 'center'
   },
   content: {
-    // display: 'flex',
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
     padding: "0px 40px"
   },
   sidebar: {
     display: 'flex',
     flexDirection: 'column',
     gap: '40px'
-    // justifyContent: 'space-between'
   },
   container: {
     display: 'grid',
@@ -52,7 +45,7 @@ const data = [
 function App() {
   const theme =  useTheme(); 
   const classes = useStyle(theme);
-  const [sidebarChartData, setSidebarChartData] = useState(data);
+  const [sidebarChartData, setSidebarChartData] = useState(null);
   const [selectedRegionsBarChart, setSelectedRegionsBarChart] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [menuID, setMenuID] = useState(1);
@@ -70,11 +63,18 @@ function App() {
         console.log(res);
         setChartData(res.data);
       });
-    } else if (menuID == 2 && !hogCountView) {
-    // Choropleth viz
+    } else if (!hogCountView) {
+    // Update map
       setUpdateMap(!updateMap);
     }
   }
+
+  useEffect(() => {
+    setSidebarChartData(null);
+    if (menuID == 1) {
+      setHogCountView(false);
+    }
+  }, [menuID, hogCountView]);
 
   return (
     <div className={classes.root}>
@@ -91,24 +91,30 @@ function App() {
               onMenuChange={setMenuID}
               onVisualize={handleBarChartVisualize}
             />
-            <SidebarChart 
-              regionName={"Region XII"} 
-              data={sidebarChartData}
-            />
+            {
+              ((sidebarChartData != null) && !hogCountView) ?
+                <SidebarChart 
+                  data={sidebarChartData}
+                />
+              :
+                null
+            }
           </div>
         </Grid>
         <Grid item xs={7}>
           { 
             !hogCountView ?
-              <ChoroplethMap
+              <DashboardMap
                 menu={menuID} 
-                year={yearData} 
+                year={yearData}
+                chartData={selectedRegionsBarChart} 
                 onClickRegion={setSidebarChartData}
                 isUpdate={updateMap}/> 
             :  
               <HorizontalBarChart  
                 data={chartData} 
                 year={yearData}
+                isVisible={hogCountView}
               />
           }
         </Grid>

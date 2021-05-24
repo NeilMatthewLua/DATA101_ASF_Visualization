@@ -15,7 +15,7 @@
  *
  * ------------------------------------------------------------------------------------------
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import * as d3 from 'd3';
@@ -34,6 +34,10 @@ const useStyle = makeStyles(theme => ({
     chartTitle: {
         textAlign: 'center',
         margin: '10px 0px 0px'
+    },
+    chartTitleNCR: {
+        textAlign: 'center',
+        margin: '60px 0px 0px',
     }
 }));
 
@@ -125,24 +129,29 @@ function SidebarChart (props) {
         },
         [props.data]
       );
-    
+
       return (
         <div id="sideBarChart" ref={containerRef} className={classes.container}>
-            <h4 className={classes.chartTitle}>{props.regionName} Hog Production</h4>
-            <svg
-                ref={ref}
-                style={{
-                    display: 'block',
-                    height: '100%',
-                    width: '100%',
-                    margin: '0 auto'
-                }}
-            >
-            <g className="plot-area" />
-            <g className="x-axis" />
-            <g className="y-axis" />
-            <g className="y-axis-label" />
-            </svg>
+            <h4 className={classes.chartTitle}>{props.data.Region} Hog Production</h4>
+            {
+                props.data.Region != 'NCR' ?
+                    <svg
+                        ref={ref}
+                        style={{
+                            display: 'block',
+                            height: '100%',
+                            width: '100%',
+                            margin: '0 auto'
+                        }}
+                    >
+                    <g className="plot-area" />
+                    <g className="x-axis" />
+                    <g className="y-axis" />
+                    <g className="y-axis-label" />
+                    </svg>
+                :
+                    <h4 className={classes.chartTitleNCR}>No farms in NCR</h4>   
+            }
         </div>
       );
 }

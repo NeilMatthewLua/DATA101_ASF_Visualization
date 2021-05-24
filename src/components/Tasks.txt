@@ -1,0 +1,9 @@
+Tasks:
+ - [BUG] Remove tooltip on switch menu
+     -Two tool tips are always being made
+ - [BUG] Sort on drop down region wonky
+ - [BUG] Make a visualization -> load toolTip -> other visualization -> toolTip no work 
+ - [IMPROVEMENT] Add tool tip description
+ - [IMPROVEMENT]Highlight area on click 
+    - https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures-around-point/
+    - https://docs.mapbox.com/mapbox-gl-js/api/map/#map#addlayer                            
