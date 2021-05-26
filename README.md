@@ -1,11 +1,30 @@
-# Getting Started with Create React App
+# Project Description
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+An interactive dashboard to visualize the status of African Swine Fever (ASF) in the Philippines
+### Members
+1. Esquillo, Vince Lander
+2. Lua, Neil Matthew
+3. Sarmiento, Aaron Joshua 
+4. Tanting, Kurt Bradly
 
 ## Deployed website URL
 
 [ASF Visualization Dashboard](https://data-101-asf-visualization-5jnpattl9-neilmatthewlua.vercel.app/)
+
+### Local App Requirements
+1. Git
+2. [Yarn](https://yarnpkg.com/getting-started/install)
+
+### Local Setup
+To get a version of the web app running locally:
+1. Clone this repository: `git clone https://github.com/NeilMatthewLua/DATA101_ASF_Visualization.git`
+2. Navigate to the repository: `cd DATA101_ASF_Visualization`
+3. Install the dependencies: `yarn install`
+
+# Supplementary Materials
+## Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## Available Scripts
 
 In the project directory, you can run:
