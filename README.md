@@ -13,7 +13,8 @@ An interactive dashboard to visualize the status of African Swine Fever (ASF) in
 
 ### Local App Requirements
 1. Git
-2. [Yarn](https://yarnpkg.com/getting-started/install)
+2. [Node.js](https://www.npmjs.com/get-npm)
+3. [Yarn](https://yarnpkg.com/getting-started/install)
 
 ### Local Setup
 To get a version of the web app running locally:
