@@ -9,7 +9,7 @@ An interactive dashboard to visualize the status of African Swine Fever (ASF) in
 
 ## Deployed website URL
 
-[ASF Visualization Dashboard](https://data-101-asf-visualization.vercel.app/)
+[ASF Visualization Dashboard](https://data-101-asf-visualization-5jnpattl9-neilmatthewlua.vercel.app/)
 
 ### Local App Requirements
 1. Git
